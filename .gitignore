@@ -20,6 +20,12 @@
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
+# 去除其他文件
+# Middleware/**/**/**/.idea/*
+
+# Middleware/**/**/**/**/target/*
+
+
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries

@@ -30,3 +30,12 @@ Apache Dubbo 是一款高性能、轻量级的开源Java RPC框架，它提供�
 
 - 服务消费者和提供者，在内存中累计调用次数和调用时间，定时每分钟发送一次统计数据到监控中心。
 
+
+
+
+
+## Dubbo参考文档
+
+1、[dubbo参考文档](https://cn.dubbo.apache.org/zh-cn/overview/)
+
+2、[dubbo整合springboot开发微服务](https://cn.dubbo.apache.org/zh-cn/overview/mannual/java-sdk/tasks/develop/springboot/)
