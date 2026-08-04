@@ -18,7 +18,7 @@ public class A5_ESTest_Doc_Insert {
 
         // 插入数据
         IndexRequest request = new IndexRequest();
-        request.index("user").id("1002");
+        request.index("user").id("1001");
 
         User user = new User();
         user.setName("zhangsan11");
