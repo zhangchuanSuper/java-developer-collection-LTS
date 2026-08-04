@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="81d1f310-e381-4d68-b761-8d3ff8e46a29" name="Changes" comment="" />
+    <list default="true" id="81d1f310-e381-4d68-b761-8d3ff8e46a29" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boot-user-service-provider/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gmall-interface/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Document/Dubbo.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../Document/Dubbo.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -129,7 +135,7 @@
       <option name="presentableId" value="Default" />
       <updated>1785327880559</updated>
       <workItem from="1785327880908" duration="18000" />
-      <workItem from="1785327907557" duration="7983000" />
+      <workItem from="1785327907557" duration="6789000" />
     </task>
     <servers />
   </component>
