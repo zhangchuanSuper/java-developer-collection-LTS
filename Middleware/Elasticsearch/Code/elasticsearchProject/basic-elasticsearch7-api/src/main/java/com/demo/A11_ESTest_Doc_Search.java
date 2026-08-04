@@ -1,14 +1,11 @@
 package com.demo;
 
 import org.apache.http.HttpHost;
-import org.elasticsearch.action.get.GetRequest;
-import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -16,7 +13,9 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.util.Iterator;
 
-public class ESTest_Doc_Search {
+public class A11_ESTest_Doc_Search {
+
+
     public static void main(String[] args) throws Exception {
 
         RestHighLevelClient esClient = new RestHighLevelClient(
@@ -47,4 +46,7 @@ public class ESTest_Doc_Search {
 
         esClient.close();
     }
+
+
+
 }
