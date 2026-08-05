@@ -13,13 +13,13 @@ public class ChatAiController {
     @Autowired
     private ChatClient chatClient;
 
-    //角色预设，使用非流式响应
+    // 角色预设，使用非流式响应
     @GetMapping("/chatai")
     public String chatAi(@RequestParam(value = "msg") String message) {
         return chatClient.prompt().user(message).call().content();
     }
 
-    //角色预设，使用流式响应
+    // 角色预设，使用流式响应
     @GetMapping(value = "/chataiStream",produces = "text/html;charset=UTF-8")
     public Flux<String> chatAiStream(@RequestParam(value = "msg") String message) {
         return chatClient.prompt().user(message).stream().content();
