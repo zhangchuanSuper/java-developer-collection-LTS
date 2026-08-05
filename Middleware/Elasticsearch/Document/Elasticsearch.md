@@ -1,6 +1,10 @@
 ## 一、DockerDesktop安装ES
 
-1、Docker安装ES7
+本次分别安装ES7.X和ES8.X这两个版本
+
+### 1、DockerDesktop安装ES7
+
+1.1 Docker安装ES7
 
 ① 使用Docker下载
 
@@ -34,7 +38,7 @@ http.cors.enabled: true           # 开启跨域访问支持
 http.cors.allow-origin: "*"       # 允许所有来源访问
 ```
 
-③ 运行命令创建ES8容器
+③ 运行命令创建ES7容器
 
 ```shell
 docker run --name elasticsearch7 -p 9200:9200  -p 9300:9300 -e "discovery.type=single-node" -e ES_JAVA_OPTS="-Xms256m -Xmx512m" -v C:/ZhangChuanSuper/nfturbo/config/elasticsearch7.yml:/usr/share/elasticsearch/config/elasticsearch.yml -d elasticsearch:7.8.0
@@ -44,7 +48,7 @@ docker run --name elasticsearch7 -p 9200:9200  -p 9300:9300 -e "discovery.type=s
 
 
 
-2、Docker安装对应kibana
+1.2、Docker安装对应kibana
 
 ① 使用docker下载kibana
 
@@ -67,16 +71,16 @@ i18n.locale: "zh-CN"
 ④ 启动Kibana
 
 ```shell
-docker run --name kibana -d -p 5601:5601  -v C:/ZhangChuanSuper/nfturbo/config/kibana7.yml:/usr/share/kibana/config/kibana.yml  kibana:7.8.0
+docker run --name kibana7 -d -p 5601:5601  -v C:/ZhangChuanSuper/nfturbo/config/kibana7.yml:/usr/share/kibana/config/kibana.yml  kibana:7.8.0
 ```
 
-⑤ 访问地址 http://localhost:5601/app/home#/ 进行验证是否安装成功
+⑤ 访问地址 http://localhost:5601/app/kibana#/home 进行验证是否安装成功
 
 
 
+### 2、DockerDesktop安装ES8
 
-
-3、运行Docker命令安装ES8
+2.1、运行Docker命令安装ES8
 
 ① 使用Docker下载
 
@@ -102,11 +106,9 @@ docker run --name elasticsearch -p 9200:9200  -p 9300:9300 -e "discovery.type=si
 
 ④ 安装完成之后访问地址 http://localhost:9200/ 进行验证，9200 端口为浏览器访问的 http 协议 RESTful 端口。
 
+2.2、Doker安装kibana
 
 
-
-
-4、Doker安装kibana
 
 ① 查看es8的
 
@@ -350,7 +352,7 @@ http://127.0.0.1:9200/shopping/_search   // GET请求
 
 
 
-## 三、ES基础API
+## 三、ES7基础API
 
 
 
