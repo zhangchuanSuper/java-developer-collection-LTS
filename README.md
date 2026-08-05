@@ -1,29 +1,16 @@
 # java-developer-collection-LTS
 
-#### 介绍
+#### 一、基础介绍
 Java学习记录，包括文档以及相关的代码 
 
-#### 软件架构
-软件架构说明
+#### 二、使用说明
+本项目分为以下几个目录
 
+```tex
+DevelopTools:开发工具目录，包括但不限于GIT、MYSQL等
+Middleware：中间件相关目录，包括但不限于消息、缓存、搜索等相关中间件
+SpringBoot：SpringBoot框架相关的学习文档
+SpringCloud：SpringCloud相关的学习文档
+Template：一些模板示例
+```
 
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-6.  https://gitee.com/gitee-stars/)
