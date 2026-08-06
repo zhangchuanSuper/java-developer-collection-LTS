@@ -16,7 +16,7 @@ public class CalculatorService {
 
     }
 
-    //注册
+    // 注册
     @Bean
     @Description("加法运算")
     public Function<AddOperation,Integer> addOperation() {
@@ -32,4 +32,5 @@ public class CalculatorService {
             return request.m * request.n;
         };
     }
+
 }

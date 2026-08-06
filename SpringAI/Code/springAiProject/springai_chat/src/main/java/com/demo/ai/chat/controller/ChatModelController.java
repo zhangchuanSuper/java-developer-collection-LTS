@@ -41,18 +41,16 @@ public class ChatModelController {
         // 使用Prompt Template 设置信息
         SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(systemText);
 
-        //替换占位符
+        // 替换占位符
         Message systemMessage = systemPromptTemplate.createMessage(Map.of("name", name, "voice", voice));
 
-        //使用Prompt封装
+        // 使用Prompt封装
         Prompt prompt = new Prompt(List.of(userMessage,systemMessage));
 
         // 调用chatModel方法
         ChatResponse response = chatModel.call(prompt);
         List<Generation> results = response.getResults();
-        return
-                results.stream().map(x->x.getOutput().getContent())
-                        .collect(Collectors.joining(""));
+        return results.stream().map(x -> x.getOutput().getContent()).collect(Collectors.joining(""));
     }
 
     // String call(String message)
