@@ -1,0 +1,716 @@
+
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>网络加密（TLS） &#8212; MinIO中文文档 | MinIO Linux中文文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/main.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>
+    <script defer="defer" src="../_static/js/main.js"></script>
+    <script defer="defer" src="../_static/js/instantSearch.js"></script>
+    <link rel="canonical" href="http://www.minio.org.cn/docs/minio/linux/operations/network-encryption.html" />
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="布署检查清单" href="checklists.html" />
+    <link rel="prev" title="使用 KES 的服务器端对象加密" href="server-side-encryption/configure-minio-kes.html" /><!-- Algolia meta attrs -->
+<meta name="docsearch:platform" content="linux"/>
+<meta name="docsearch:version" content="linux"/>
+<meta name="pagename" content="operations/network-encryption"/>
+
+<!-- Preload fonts and scripts -->
+<link rel="preload" href="../_static/fonts/inter/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../_static/fonts/inter/Inter-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../_static/fonts/inter/Inter-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preconnect" href="https://WDBGN0FV99-dsn.algolia.net" crossorigin />
+<link rel="stylesheet" type="text/css" href="https://www.minio.org.cn/docs/static/jiucuo.css" />
+
+   
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head><body><header class="header inactive">
+   <div class="container">
+      <div class="header__top">
+         <a href="/" class="header__logo">
+           <svg viewBox="0 0 162.612 24.465">
+              <path d="M52.751.414h9.108v23.63h-9.108zM41.711.74l-18.488 9.92a.919.919 0 0 1-.856 0L3.879.74A2.808 2.808 0 0 0 2.558.414h-.023A2.4 2.4 0 0 0 0 2.641v21.376h9.1V13.842a.918.918 0 0 1 1.385-.682l10.361 5.568a3.634 3.634 0 0 0 3.336.028l10.933-5.634a.917.917 0 0 1 1.371.69v10.205h9.1V2.641A2.4 2.4 0 0 0 43.055.414h-.023a2.808 2.808 0 0 0-1.321.326zm65.564-.326h-9.237v10.755a.913.913 0 0 1-1.338.706L72.762.675a2.824 2.824 0 0 0-1.191-.261h-.016a2.4 2.4 0 0 0-2.535 2.227v21.377h9.163V13.275a.914.914 0 0 1 1.337-.707l24.032 11.2a2.813 2.813 0 0 0 1.188.26 2.4 2.4 0 0 0 2.535-2.227zm7.161 23.63V.414h4.191v23.63zm28.856.421c-11.274 0-19.272-4.7-19.272-12.232C124.02 4.741 132.066 0 143.292 0s19.32 4.7 19.32 12.233-7.902 12.232-19.32 12.232zm0-21.333c-8.383 0-14.84 3.217-14.84 9.1 0 5.926 6.457 9.1 14.84 9.1s14.887-3.174 14.887-9.1c0-5.883-6.504-9.1-14.887-9.1z" />
+           </svg>
+         </a>
+         <!--
+         <div class="header__docs">
+           <div class="header__docs__current">
+                    MinIO中文文档<svg viewBox="0 0 9 5" width="9" height="5">
+    <path d="M8.071.135a.562.562 0 1 1 .733.855L4.866 4.365a.562.562 0 0 1-.732 0L.196.99A.562.562 0 1 1 .93.135L4.5 3.197 8.071.135z" fill="currentColor" fill-rule="evenodd" />
+</svg>
+                 </div>
+           <nav class="header__docs__menu">
+              
+                 
+                 <a target="" class="current" href="">                  
+                    MinIO中文文档
+                 </a>
+              
+                 
+                 <a target="_blank" class="" href="https://minio.org.cn/docs/directpv">                  
+                    DirectPV 文档
+                 </a>
+              
+                 
+                 <a target="_blank" class="" href="https://minio.org.cn/docs/kes">                  
+                    KES文档
+                 </a>
+              
+           </nav>
+         </div>
+         -->
+
+         <nav class="nav hidden-rm">
+            <a target="_blank" rel="noreferrer" href="https://subnet.minio.org.cn/" class="nav__link">
+               <span>商业客户登录</span>
+            </a>
+         </nav>
+
+         <div class="header__actions">
+           <button data-aside-toggle="nav" type="button" class="icon visible-rm"><svg width="17" height="13" viewbox="0 0 17 13">
+    <path d="M16.034 0H.966C.433 0 0 .346 0 .773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773S16.567 0 16.034 0zm0 5.409H.966c-.533 0-.966.346-.966.773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773s-.433-.773-.966-.773zm0 5.409H.966c-.533 0-.966.346-.966.773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773s-.433-.773-.966-.773z" />
+</svg>
+              菜单
+           </button>
+
+           <button id="dark-mode-toggle" type="button" class="icon icon--switch"><svg width="21" height="21" viewBox="0 0 48 48" fill="currentColor">
+    <path d="M24 42q-7.5 0-12.75-5.25T6 24q0-6.75 3.975-11.45Q13.95 7.85 20.4 6.5q2.05-.4 2.8.7t-.05 3q-.45 1.15-.7 2.35-.25 1.2-.25 2.45 0 4.5 3.15 7.65Q28.5 25.8 33 25.8q1.25 0 2.425-.225 1.175-.225 2.275-.625 2.15-.8 3.2.075 1.05.875.55 2.975-1.35 6.05-6.05 10.025Q30.7 42 24 42Zm0-3q5.45 0 9.5-3.375t5.05-7.925q-1.25.55-2.675.825Q34.45 28.8 33 28.8q-5.75 0-9.775-4.025T19.2 15q0-1.2.25-2.575.25-1.375.9-3.125-4.9 1.35-8.125 5.475Q9 18.9 9 24q0 6.25 4.375 10.625T24 39Zm-.2-14.85Z" />
+</svg><svg width="17" height="17" viewBox="0 0 17 17">
+    <path d="M8.5 2.898c-.167 0-.306-.055-.415-.164s-.164-.248-.164-.415V.58c0-.167.055-.306.164-.415S8.333 0 8.5 0s.306.055.415.164.164.248.164.415v1.739c0 .167-.055.306-.164.415s-.248.164-.415.164zm3.96 1.642c-.116-.116-.174-.251-.174-.406s.058-.29.174-.406l1.217-1.236c.116-.116.254-.174.415-.174s.299.058.415.174.174.251.174.406-.058.29-.174.406L13.272 4.54c-.116.116-.251.174-.406.174s-.29-.058-.406-.174zm2.222 4.54c-.167 0-.306-.055-.415-.164s-.164-.248-.164-.415.055-.306.164-.415.248-.164.415-.164h1.739c.167 0 .306.055.415.164S17 8.333 17 8.5s-.055.306-.164.415-.248.164-.415.164h-1.739zM8.5 17c-.167 0-.306-.055-.415-.164s-.164-.248-.164-.415v-1.739c0-.167.055-.306.164-.415s.248-.164.415-.164.306.055.415.164.164.248.164.415v1.739c0 .167-.055.306-.164.415S8.667 17 8.5 17zM3.728 4.54L2.492 3.323c-.116-.116-.174-.254-.174-.415s.058-.299.174-.415.251-.174.406-.174.29.058.406.174L4.54 3.728c.116.116.174.251.174.406s-.058.29-.174.406c-.116.103-.254.155-.415.155s-.293-.052-.396-.155zm9.968 9.968l-1.236-1.236c-.116-.116-.174-.251-.174-.406s.058-.29.174-.406c.103-.103.235-.155.396-.155s.299.052.415.155l1.256 1.217c.116.116.171.254.164.415s-.061.299-.164.415c-.116.116-.254.174-.415.174s-.299-.058-.415-.174h0zM.58 9.08c-.167 0-.306-.055-.415-.164S0 8.667 0 8.5s.055-.306.164-.415.248-.164.415-.164h1.739c.167 0 .306.055.415.164s.164.248.164.415-.055.306-.164.415-.248.164-.415.164H.58zm1.912 5.428c-.116-.116-.174-.251-.174-.406s.058-.29.174-.406l1.236-1.236c.103-.103.235-.155.396-.155s.299.052.415.155c.116.116.174.254.174.415s-.058.299-.174.415l-1.217 1.217c-.116.116-.254.174-.415.174s-.299-.058-.415-.174h0zM8.5 13.136a4.47 4.47 0 0 1-3.284-1.352A4.47 4.47 0 0 1 3.864 8.5a4.47 4.47 0 0 1 1.352-3.284A4.47 4.47 0 0 1 8.5 3.864a4.47 4.47 0 0 1 3.284 1.352A4.47 4.47 0 0 1 13.136 8.5a4.47 4.47 0 0 1-1.352 3.284A4.47 4.47 0 0 1 8.5 13.136zm0-1.159a3.35 3.35 0 0 0 2.463-1.014A3.35 3.35 0 0 0 11.977 8.5a3.35 3.35 0 0 0-1.014-2.463A3.35 3.35 0 0 0 8.5 5.023a3.35 3.35 0 0 0-2.463 1.014A3.35 3.35 0 0 0 5.023 8.5a3.35 3.35 0 0 0 1.014 2.463A3.35 3.35 0 0 0 8.5 11.977z" fill="currentColor" />
+</svg>
+                 夜间模式
+           </button>
+
+           <button id="read-mode-toggle" type="button" class="icon icon--switch"><svg width="17" height="15" viewBox="0 0 18 16" fill="none">
+    <path d="M4.09286 12.7785C4.87857 12.7785 5.63929 12.8949 6.375 13.1275C7.11071 13.3602 7.83571 13.7181 8.55 14.2013V2.97987C7.90714 2.40716 7.2 1.97315 6.42857 1.67785C5.65714 1.38255 4.87857 1.2349 4.09286 1.2349C3.55 1.2349 3.05357 1.29754 2.60357 1.42282C2.15357 1.5481 1.67143 1.72707 1.15714 1.95973C1.08571 1.99553 1.03571 2.04027 1.00714 2.09396C0.978571 2.14765 0.964286 2.20134 0.964286 2.25503V13.1544C0.964286 13.2438 0.992857 13.311 1.05 13.3557C1.10714 13.4004 1.17143 13.4139 1.24286 13.396C1.6 13.1812 2.02857 13.0246 2.52857 12.9262C3.02857 12.8277 3.55 12.7785 4.09286 12.7785ZM9.51429 14.2013C10.2429 13.7181 10.9607 13.3602 11.6679 13.1275C12.375 12.8949 13.1214 12.7785 13.9071 12.7785C14.45 12.7785 14.975 12.8277 15.4821 12.9262C15.9893 13.0246 16.4143 13.1454 16.7571 13.2886C16.8286 13.3244 16.8929 13.3199 16.95 13.2752C17.0071 13.2304 17.0357 13.1544 17.0357 13.047V2.25503C17.0357 2.20134 17.0214 2.14765 16.9929 2.09396C16.9643 2.04027 16.9143 1.99553 16.8429 1.95973C16.3714 1.70917 15.9 1.52573 15.4286 1.4094C14.9571 1.29306 14.45 1.2349 13.9071 1.2349C13.1214 1.2349 12.3536 1.38255 11.6036 1.67785C10.8536 1.97315 10.1571 2.40716 9.51429 2.97987V14.2013ZM9.70386 15.4635C9.29873 15.7533 8.74672 15.7502 8.34198 15.4599C7.82063 15.0859 7.26854 14.7782 6.68571 14.5369C5.84286 14.1879 4.97857 14.0134 4.09286 14.0134C3.63571 14.0134 3.18214 14.0761 2.73214 14.2013C2.28214 14.3266 1.82857 14.4787 1.37143 14.6577C1.04286 14.8546 0.732143 14.8233 0.439286 14.5638C0.146429 14.3043 0 13.9418 0 13.4765V2.1745C0 1.88814 0.0571429 1.62864 0.171429 1.39597C0.285714 1.16331 0.442857 0.98434 0.642857 0.859061C1.18571 0.572707 1.74643 0.357942 2.325 0.214765C2.90357 0.0715887 3.49286 0 4.09286 0C4.97857 0 5.83929 0.1566 6.675 0.469799C7.51071 0.782998 8.3 1.2528 9.04286 1.87919C9.75714 1.2528 10.5286 0.782998 11.3571 0.469799C12.1857 0.1566 13.0357 0 13.9071 0C14.5071 0 15.0929 0.0715887 15.6643 0.214765C16.2357 0.357942 16.7929 0.572707 17.3357 0.859061C17.55 0.98434 17.7143 1.16331 17.8286 1.39597C17.9429 1.62864 18 1.88814 18 2.1745V13.4765C18 13.9597 17.8393 14.3311 17.5179 14.5906C17.1964 14.8501 16.8786 14.8725 16.5643 14.6577C16.1214 14.4609 15.6786 14.3043 15.2357 14.1879C14.7929 14.0716 14.35 14.0134 13.9071 14.0134C13.0214 14.0134 12.1679 14.1879 11.3464 14.5369C10.7766 14.779 10.229 15.0879 9.70386 15.4635Z" fill="currentColor" />
+</svg><svg width="17" height="15" viewBox="0 0 18 16">
+    <path d="M4.09286 12.7785C4.87857 12.7785 5.63929 12.8949 6.375 13.1275C7.11071 13.3602 7.83571 13.7181 8.55 14.2013V2.97987C7.90714 2.40716 7.2 1.97315 6.42857 1.67785C5.65714 1.38255 4.87857 1.2349 4.09286 1.2349C3.55 1.2349 3.05357 1.29754 2.60357 1.42282C2.15357 1.5481 1.67143 1.72707 1.15714 1.95973C1.08571 1.99553 1.03571 2.04027 1.00714 2.09396C0.978571 2.14765 0.964286 2.20134 0.964286 2.25503V13.1544C0.964286 13.2438 0.992857 13.311 1.05 13.3557C1.10714 13.4004 1.17143 13.4139 1.24286 13.396C1.6 13.1812 2.02857 13.0246 2.52857 12.9262C3.02857 12.8277 3.55 12.7785 4.09286 12.7785ZM9.51429 14.2013C10.2429 13.7181 10.9607 13.3602 11.6679 13.1275C12.375 12.8949 13.1214 12.7785 13.9071 12.7785C14.45 12.7785 14.975 12.8277 15.4821 12.9262C15.9893 13.0246 16.4143 13.1454 16.7571 13.2886C16.8286 13.3244 16.8929 13.3199 16.95 13.2752C17.0071 13.2304 17.0357 13.1544 17.0357 13.047V2.25503C17.0357 2.20134 17.0214 2.14765 16.9929 2.09396C16.9643 2.04027 16.9143 1.99553 16.8429 1.95973C16.3714 1.70917 15.9 1.52573 15.4286 1.4094C14.9571 1.29306 14.45 1.2349 13.9071 1.2349C13.1214 1.2349 12.3536 1.38255 11.6036 1.67785C10.8536 1.97315 10.1571 2.40716 9.51429 2.97987V14.2013ZM9.70386 15.4635C9.29873 15.7533 8.74672 15.7502 8.34198 15.4599C7.82063 15.0859 7.26854 14.7782 6.68571 14.5369C5.84286 14.1879 4.97857 14.0134 4.09286 14.0134C3.63571 14.0134 3.18214 14.0761 2.73214 14.2013C2.28214 14.3266 1.82857 14.4787 1.37143 14.6577C1.04286 14.8546 0.732143 14.8233 0.439286 14.5638C0.146429 14.3043 0 13.9418 0 13.4765V2.1745C0 1.88814 0.0571429 1.62864 0.171429 1.39597C0.285714 1.16331 0.442857 0.98434 0.642857 0.859061C1.18571 0.572707 1.74643 0.357942 2.325 0.214765C2.90357 0.0715887 3.49286 0 4.09286 0C4.97857 0 5.83929 0.1566 6.675 0.469799C7.51071 0.782998 8.3 1.2528 9.04286 1.87919C9.75714 1.2528 10.5286 0.782998 11.3571 0.469799C12.1857 0.1566 13.0357 0 13.9071 0C14.5071 0 15.0929 0.0715887 15.6643 0.214765C16.2357 0.357942 16.7929 0.572707 17.3357 0.859061C17.55 0.98434 17.7143 1.16331 17.8286 1.39597C17.9429 1.62864 18 1.88814 18 2.1745V13.4765C18 13.9597 17.8393 14.3311 17.5179 14.5906C17.1964 14.8501 16.8786 14.8725 16.5643 14.6577C16.1214 14.4609 15.6786 14.3043 15.2357 14.1879C14.7929 14.0716 14.35 14.0134 13.9071 14.0134C13.0214 14.0134 12.1679 14.1879 11.3464 14.5369C10.7766 14.779 10.229 15.0879 9.70386 15.4635Z" fill="currentColor" />
+    <path d="M9 3C6.2 -0.599997 2.16667 0.833336 0.5 2L1 14L5 13L9 15V3Z" fill="currentColor" />
+</svg>
+                 Reading Mode
+           </button>
+         </div>
+      </div><div class="nav">
+    <div class="hide-aside visible-rm">
+        <button type="button" class="icon"><svg width="12" height="12">
+    <path d="M11.253 1.691L10.125.563 5.653 5.035 1.181.563.053 1.691l4.472 4.472-4.472 4.472 1.128 1.128 4.472-4.472 4.472 4.472 1.128-1.128-4.472-4.472z" fill-rule="evenodd"></path>
+</svg>
+            关闭导航
+        </button>
+    </div>
+
+    <a target="_blank" rel="noreferrer" href="https://subnet.minio.org.cn/" class="nav__link visible-rm">
+        <span>商业客户</span>
+    </a>
+
+    <div class="nav__item">
+        <div class="nav__link nav__link--dropdown">
+             <span>产品</span>
+        </div>
+
+        <div class="nav__dropdown nav__dropdown--product">
+            <div class="nav__dropdown__inner">
+                <div class="nav__feature">
+                    <div class="nav__column">
+                    
+                    <div class="nav__column__title">多云</div>
+       
+                                <a href="/product/kubernetes.html" class="nav__sub" data-nav="k8s">支持Kubernetes 的 MinIO</a>
+                                <a href="/product/private-cloud-vmware-tanzu.html" class="nav__sub" data-nav="vm-tanzu">支持VMware Tanzu 的 MinIO</a>
+                                <a href="/product/private-cloud-red-hat-openshift.html" class="nav__sub" data-nav="open-shift">支持OpenShift 的 MinIO</a>
+                                <a href="/product/multicloud-suse-rancher.html" class="nav__sub" data-nav="multicloud-suse-rancher">支持SUSE Rancher 的 MinIO</a>
+                                <a href="/product/multicloud-elastic-kubernetes-service.html" class="nav__sub" data-nav="elastic-kubernetes-service">亚马逊云 Elastic Kubernetes 服务的 MinIO</a>
+                                <a href="/product/multicloud-azure-kubernetes-service.html" class="nav__sub" data-nav="azure-kubernetes-service">微软云 Kubernetes 服务的 MinIO</a>
+                                <a href="/product/multicloud-google-kubernetes-service.html" class="nav__sub" data-nav="google-kubernetes-engine">谷歌 Kubernetes Engine 的 MinIO</a>
+                 </div>
+
+                    <i class="nav__separator"></i>
+
+                    <div class="nav__column">
+                        <div class="nav__column__title">新特性</div>
+
+                        <a href="/product/active-data-replication-for-object-storage.html" class="nav__sub" data-nav="multi-site-replication">多地复制</a>
+                       <a href="/product/identity-and-access-management.html" class="nav__sub" data-nav="global-identity-access-management">全球身份和访问管理</a>
+                        <a href="/product/enterprise-object-storage-encryption.html" class="nav__sub" data-nav="encryption">加密</a>
+                        <a href="/product/data-immutability-for-object-storage.html" class="nav__sub" data-nav="object-immutability">存储桶和对象不变性</a>
+                        <a href="/product/object-versioning-bucket-versioning.html" class="nav__sub" data-nav="versioning">存储桶和对象版本控制</a>
+                        <a href="/product/automated-data-tiering-lifecycle-management.html" class="nav__sub" data-nav="life-cycle">数据生命周期管理和分层</a>
+                        <a href="/product/automated-cloud-data-management-interface.html" class="nav__sub" data-nav="interface">自动化数据管理界面</a>
+                        <a href="/product/object-storage-performance-monitoring.html" class="nav__sub" data-nav="monitoring">监控</a>
+                        <a href="/product/scalable-object-storage.html" class="nav__sub" data-nav="scalable">可扩展性</a>
+                        <a href="/product/s3-compatibility.html" class="nav__sub" data-nav="s3-compatibility">亚马逊云 S3 兼容性</a>
+                    </div>
+
+                    <div class="nav__column">
+                        <div class="nav__sub" data-nav="hybrid-cloud-storage">
+                            <a href="/hybrid-cloud-storage.html" class="nav__lead">
+                                <img width="30" height="23" src="/_static/img/nav/hybrid-cloud.svg" alt="混合云对象存储">
+                                混合云对象存储
+                            </a>
+                            <div class="nav__jump">
+                                <a href="hybrid-cloud-storage.html#overview">概述</a>
+                                <a href="hybrid-cloud-storage.html#architecture">架构</a>
+                            </div>
+                        </div>
+                        <div class="nav__sub" data-nav="overview">
+                           <a href="/product/overview.html" class="nav__lead">
+                                <img width="30" height="25" src="/_static/img/nav/baremetal.svg" alt="Baremetal">
+                                裸机
+                            </a>
+                            <div class="nav__jump">
+                               <a href="/product/overview.html#features">概览</a>
+                               <a href="/product/overview.html#architecture">架构</a>
+                            </div>
+                        </div>
+                       <a href="/product/erasure-code-calculator.html" class="nav__sub nav__lead" data-nav="erasure-code-calculator">
+                            <img width="30" height="24" class="h-6" src="/_static/img/nav/erasure-code-calculator.svg" alt="纠删码计算器">
+                            纠删码计算器
+                        </a>
+                       <a href="/product/reference-hardware.html" class="nav__sub nav__lead" data-nav="reference-hardware">
+                            <img width="30" height="18" src="/_static/img/nav/ref-hardware.svg" alt="参考硬件">
+                            参考硬件
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="nav__item">
+        <div class="nav__link nav__link--dropdown">
+            <span>解决方案</span> 
+
+                    <div class="nav__dropdown">
+                        <div class="nav__dropdown__inner">
+                            <a href="/solutions/modern-data-lakes-lakehouses.html" class="nav__sub" data-nav="datalakes">
+                                <span>现代数据湖</span>
+                                <small>现代多引擎数据湖依赖于提供大规模性能的对象存储。了解有关此核心 MinIO 用例的更多信息。</small>
+                            </a>
+                            <a href="/solutions/object-storage-for-ai.html" class="nav__sub" data-nav="ai-ml">
+                                <span>AI&ML</span>
+                                <small>对象存储正在推动人工智能革命。了解 MinIO 如何通过大规模性能来引领这一努力。</small>
+                            </a>
+                            <a href="/product/integrations.html" class="nav__sub" data-nav="integrations">
+                                <span>集成</span>
+                                <small>浏览我们广泛的集成产品组合</small>
+                            </a>
+                            <a href="/solutions/sqlserver.html" class="nav__sub" data-nav="sql-server">
+                                <span>SQL Server</span>
+                                <small>了解如何将 SQL Server 2022 与 MinIO 配对，以便在任何云上对数据运行查询，而无需移动数据。</small>
+                            </a>
+                            <a href="/solutions/commvault.html" class="nav__sub" data-nav="commvault">
+                                <span>Commvault(康沃)</span>
+                                <small>了解 Commvault 和 MinIO 如何合作，为任务关键型备份和恢复工作负载提供大规模性能。</small>
+                            </a>
+                            <a href="/solutions/snowflake.html" class="nav__sub" data-nav="snowflake">
+                                <span>snowflake(雪花)</span>
+                                <small>使用雪花数据云查询和分析驻留在 MinIO 上的多个数据源，包括流数据。无需移动数据，只需使用 SnowSQL 进行查询即可。</small>
+                            </a>
+                            <a href="/solutions/optimize-splunk-smartstore-performance.html" class="nav__sub" data-nav="splunk">
+                                <span>Splunk(斯普伦克)</span>
+                                <small>了解 MinIO 如何为 Splunk 智能商店提供大规模性能</small>
+                            </a>
+                            <a href="/solutions/veeam.html" class="nav__sub" data-nav="veeam">
+                                <span>Veeam</span>
+                                <small>了解 MinIO 和 Veeam 如何合作，为各种备份用例提高性能和可扩展性。</small>
+                            </a>
+                            <a href="/solutions/hdfs-migration.html" class="nav__sub" data-nav="hdfs-migration">
+                                <span>HDFS 迁移</span>
+                                <small>利用 MinIO 的高性能 Kubernetes 原生对象存储实现大数据存储基础架构的现代化和简化。</small>
+                            </a>
+                            <a href="/solutions/vmware.html" class="nav__sub" data-nav="vmware">
+                                <span>VMware</span>
+                                <small>了解 MinIO 如何在从持久数据平台到 TKGI 的整个产品组合中与 VMware 集成，以及我们如何支持他们的 Kubernetes 雄心壮志。</small>
+                            </a>
+                        </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="/docs/cn/minio/linux/" class="nav__link nav__link--active">
+        <span>文档</span>
+    </a>
+
+    <a href="https://blog.minio.org.cn/" class="nav__link">
+        <span>博客</span>
+    </a>
+
+    <a href="https://resources.minio.org.cn" class="nav__link" data-href="resources" target="_blank">
+        <span>资源</span>
+    </a>
+
+    <a href="https://dl.minio.org.cn/" class="nav__link" data-href="mirrors" target="_blank">
+        <span>中国加速镜像</span>
+    </a>
+
+    <a href="/pricing.shtml" class="nav__link" data-href="pricing" target="_blank">
+        <span>价格</span>
+    </a>
+
+    <a class="nav__link nav__link--download" href="/download.shtml" target="_blank">下载</a>
+</div>
+
+      <h2 class="header__title hidden-rm">中文文档</h2>
+      <div id="search">
+        <div class="search__inner">
+           <div id="search-box"></div>
+           
+           <div class="search__dropdown">
+              <div id="search-filters"></div>
+              <div id="search-clear"></div>
+              <div id="search-results"></div>
+              <div id="search-powered-by"></div>
+           </div>
+        </div>
+      </div>
+   </div><div class="platform-nav">
+    <div class="platform-nav__main">
+        <div class="container">
+            <nav>
+                <a rel="noreferrer" href="/docs/minio/kubernetes/upstream/index.html" class="">
+                    <img class="hidden-rm" src="../_static/img/icons/kubernetes.svg" alt="Kubernetes" />
+                    <img class="hidden-rm" src="../_static/img/icons/kubernetes-inactive.svg" alt="Kubernetes" />
+                    Kubernetes
+                </a>
+                
+                <a rel="noreferrer" href="/docs/minio/container/index.html" class="">
+                    <img class="hidden-rm" src="../_static/img/icons/docker.svg" alt="Docker" />
+                    <img class="hidden-rm" src="../_static/img/icons/docker-inactive.svg" alt="Docker" />
+                    Docker
+                </a>
+            
+                <a rel="noreferrer" href="/docs/minio/linux/index.html" class="active">
+                    <img class="hidden-rm" src="../_static/img/icons/linux.svg" alt="Linux" />
+                    <img class="hidden-rm" src="../_static/img/icons/linux-inactive.svg" alt="Linux" />
+                    Linux
+                </a>
+            
+                <a rel="noreferrer" href="/docs/minio/macos/index.html" class="">
+                    <img class="hidden-rm" src="../_static/img/icons/macos.svg" alt="macOS" />
+                    <img class="hidden-rm" src="../_static/img/icons/macos-inactive.svg" alt="macOS" />
+                    macOS
+                </a>
+            
+                <a rel="noreferrer" href="/docs/minio/windows/index.html" class="">
+                    <img class="hidden-rm" src="../_static/img/icons/windows.svg" alt="Windows" />
+                    <img class="hidden-rm" src="../_static/img/icons/windows-inactive.svg" alt="Windows" />
+                    Windows
+                </a>
+            </nav>
+        </div>
+        <button type="button" class="icon search-toggle search-toggle--keyboard visible-rm"><svg width="14" height="15">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 6.5a5 5 0 1 1-10 0 5 5 0 0 1 10 0Zm-1.59 5.535a6.5 6.5 0 1 1 1.179-.931l1.845 2.096a.75.75 0 0 1-1.127.99L9.91 12.036Z"/>
+</svg>
+            Search
+        </button>
+    </div></div>
+</header>
+   <section class="content">
+      <div class="container">
+         <div class="sidebar inactive scrollbar">
+            <div class="hide-aside visible-rm">
+               <button type="button" class="icon"><svg width="12" height="12">
+    <path d="M11.253 1.691L10.125.563 5.653 5.035 1.181.563.053 1.691l4.472 4.472-4.472 4.472 1.128 1.128 4.472-4.472 4.472 4.472 1.128-1.128-4.472-4.472z" fill-rule="evenodd"/>
+</svg>
+                     关闭文档导航
+               </button>
+            </div>
+
+            <a class="sidebar__title" href="../index.html">MinIO Linux中文文档</a>
+            
+            
+      <nav
+         class="docs"
+         role="navigation"
+      >
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">安装和部署MinIO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manage-existing-deployments.html">管理现有的MinIO部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">核心运营概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">监控和警报</a></li>
+<li class="toctree-l1"><a class="reference internal" href="external-iam.html">外部身份管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server-side-encryption.html">数据加密（SSE）</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">网络加密（TLS）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="checklists.html">布署检查清单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-recovery.html">硬件故障和恢复办法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/minio-console.html">概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/minio-console.html#id3">配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/minio-console.html#minio-console-play-login">登录</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/minio-console.html#id6">文档</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/minio-console.html#id7">可用任务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/object-management.html">对象管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/monitoring.html">监控存储桶和对象事件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/identity-access-management.html">身份和访问管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/server-side-encryption.html">服务器端对象加密</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/bucket-replication.html">桶复制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/batch-framework.html">批处理框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/concepts.html">核心管理概念</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers/minio-drivers.html">软件开发工具包（SDK）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/security-token-service.html">安全令牌服务（STS）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/transforms-with-object-lambda.html">使用对象 Lambda 进行转换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/file-transfer-protocol.html">文件传输协议(FTP/SFTP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/minio-mc.html">MinIO客户端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/minio-mc-admin.html">MinIO 管理客户端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/minio-mc-deprecated.html">废弃的命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/minio-server/minio-server.html">MinIO服务器命令介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/s3-api-compatibility.html">S3 API 兼容性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrations/integrations.html">集成</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">词汇表</a></li>
+</ul>
+
+      </nav>
+         </div><div class="content__toc scrollbar scrollbar--hover">
+  	<button data-aside-toggle="doc" class="icon" type="button"><svg width="17" height="13" viewbox="0 0 17 13">
+    <path d="M16.034 0H.966C.433 0 0 .346 0 .773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773S16.567 0 16.034 0zm0 5.409H.966c-.533 0-.966.346-.966.773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773s-.433-.773-.966-.773zm0 5.409H.966c-.533 0-.966.346-.966.773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773s-.433-.773-.966-.773z" />
+</svg> TOC Menu
+  	</button>
+
+  	<div id="content-toc"></div>
+		<button class="icon search-toggle" type="button"><svg width="14" height="15">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 6.5a5 5 0 1 1-10 0 5 5 0 0 1 10 0Zm-1.59 5.535a6.5 6.5 0 1 1 1.179-.931l1.845 2.096a.75.75 0 0 1-1.127.99L9.91 12.036Z"/>
+</svg> 搜索
+		</button>
+</div>
+
+         <div class="content__main">
+            
+  <section id="tls">
+<span id="minio-tls"></span><h1>网络加密（TLS）<a class="headerlink" href="#tls" title="此标题的永久链接"></a></h1>
+<nav class="contents local" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#minio-tls-user-generated" id="id5">启用 TLS</a></p></li>
+<li><p><a class="reference internal" href="#cert-manager" id="id6">使用 cert-manager 进行证书管理</a></p></li>
+<li><p><a class="reference internal" href="#minio-tls-third-party-ca" id="id7">第三方证书颁发机构</a></p></li>
+<li><p><a class="reference internal" href="#cas" id="id8">自签名、内部、私有证书以及带有中级证书的公共证书颁发机构（CAs）</a></p></li>
+</ul>
+</nav>
+<p>MinIO支持传输层安全性（TLS）1.2+加密的进出流量。</p>
+<div class="note admonition">
+<p class="admonition-title">SSL已废弃</p>
+<p>TLS是安全套接字层（SSL）加密的后继者。
+自2018年6月30日起，SSL已完全被废弃，详见 <a class="reference external" href="https://tools.ietf.org/html/rfc7568">已弃用公告</a>  。</p>
+</div>
+<section id="minio-tls-user-generated">
+<span id="id1"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">启用 TLS</a><a class="headerlink" href="#minio-tls-user-generated" title="此标题的永久链接"></a></h2>
+<blockquote>
+<div><p>以下各节介绍了如何为MinIO启用TLS。
+您可以使用来自知名证书颁发机构、内部或私有CA或自签名证书的TLS证书。</p>
+<p>在开始之前，请注意以下几点要点：</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>每个节点配置TLS</p></li>
+<li><p>请确保证书对运行MinIO服务器进程的用户可读。</p></li>
+<li><p>更新 <a class="reference internal" href="../reference/minio-server/settings/core.html#envvar.MINIO_VOLUMES" title="envvar.MINIO_VOLUMES"><code class="xref minio minio-envvar docutils literal notranslate"><span class="pre">MINIO_VOLUMES</span></code></a> 和任何需要使用 <code class="docutils literal notranslate"><span class="pre">HTTPS</span></code> URL的服务。</p></li>
+</ul>
+</section>
+<section id="cert-manager">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">使用 cert-manager 进行证书管理</a><a class="headerlink" href="#cert-manager" title="此标题的永久链接"></a></h2>
+<blockquote>
+<div><p>MinIO 操作员支持使用 <a class="reference external" href="https://cert-manager.io/">cert-manager</a> 完全替代其内置的自动证书管理 <em>或</em> 用户驱动的手动证书管理。
+有关使用 cert-manager 部署 MinIO 操作员和租户的说明，请参阅 <span class="xref std std-ref">cert-manager 页面</span> 。</p>
+<p>MinIO 服务器会搜索每个节点的 TLS 密钥和证书，并使用这些凭据启用 TLS。
+搜索位置取决于您的 MinIO 配置：</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-0">
+Default Path</label><div class="sd-tab-content docutils">
+<p>默认情况下，MinIO 服务器在以下目录中查找每个节点的 TLS 密钥和证书：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/.minio/certs
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">${HOME}</span></code> 是运行 MinIO Server 进程的用户的 home 目录。
+如果 <code class="docutils literal notranslate"><span class="pre">${HOME}/.minio/certs</span></code> 目录不存在，您可能需要创建它。</p>
+<p>对于由 <code class="docutils literal notranslate"><span class="pre">systemd</span></code> 管理的部署，这必须对应于运行 MinIO 进程的 <code class="docutils literal notranslate"><span class="pre">USER</span></code> 。
+如果该用户没有 home 目录，请使用 <span class="guilabel">Custom Path</span> 选项代替。</p>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-1">
+Custom Path</label><div class="sd-tab-content docutils">
+<p>您可以使用 <a class="reference internal" href="../reference/minio-server/minio-server.html#minio.server.-certs-dir" title="minio.server.--certs-dir"><code class="xref minio minio-mc-cmd docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span> <span class="pre">--certs-dir</span></code></a> 或 <code class="docutils literal notranslate"><span class="pre">-S</span></code> 参数为 MinIO 服务器指定一个搜索证书的路径。</p>
+<p>例如，以下命令片段指导 MinIO 进程使用 <code class="docutils literal notranslate"><span class="pre">/opt/minio/certs</span></code> 目录获取 TLS 证书。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>minio<span class="w"> </span>server<span class="w"> </span>--certs-dir<span class="w"> </span>/opt/minio/certs<span class="w"> </span>...
+</pre></div>
+</div>
+<p>运行 MinIO 服务的用户 <em>必须</em> 具有读取和写入此目录的权限。</p>
+</div>
+</div>
+<p>将默认域（例如 <code class="docutils literal notranslate"><span class="pre">minio.example.net</span></code> ）的 TLS 证书放在 <code class="docutils literal notranslate"><span class="pre">/certs</span></code> 目录中，私钥命名为 <code class="docutils literal notranslate"><span class="pre">private.key</span></code> ， 公证书命名为 <code class="docutils literal notranslate"><span class="pre">public.crt</span></code> 。</p>
+<p>例如:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>/path/to/certs
+<span class="w">  </span>private.key
+<span class="w">  </span>public.crt
+</pre></div>
+</div>
+<p>您可以使用 MinIO 的 <a class="reference external" href="https://github.com/minio/certgen">certgen</a> 工具来生成自签名的证书，以便在启用了 TLS 的情况下评估 MinIO。
+例如，以下命令生成一个自签名的证书，其中包含与 MinIO 服务器主机相关的一组 IP 和 DNS 主机名（SANs）：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>certgen<span class="w"> </span>-host<span class="w"> </span><span class="s2">&quot;localhost,minio-*.example.net&quot;</span>
+</pre></div>
+</div>
+<p>将生成的 <code class="docutils literal notranslate"><span class="pre">public.crt</span></code> 和 <code class="docutils literal notranslate"><span class="pre">private.key</span></code> 文件放置到 <code class="docutils literal notranslate"><span class="pre">/path/to/certs</span></code> 目录中，以启用 MinIO 部署的 TLS 功能。
+应用程序可以使用 <code class="docutils literal notranslate"><span class="pre">public.crt</span></code> 作为受信任的证书颁发机构，以允许连接到MinIO部署，而无需禁用证书验证。</p>
+<p>如果您正在重新配置一个之前未启用TLS的现有部署，请更新环境变量 <a class="reference internal" href="../reference/minio-server/settings/core.html#envvar.MINIO_VOLUMES" title="envvar.MINIO_VOLUMES"><code class="xref minio minio-envvar docutils literal notranslate"><span class="pre">MINIO_VOLUMES</span></code></a>，将其指定为 <code class="docutils literal notranslate"><span class="pre">https</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">http</span></code> 。
+您可能还需要更新应用程序或客户端使用的URL。</p>
+</div></blockquote>
+<section id="supported-secret-types">
+<h3>Supported Secret Types<a class="headerlink" href="#supported-secret-types" title="此标题的永久链接"></a></h3>
+<blockquote>
+<div><p>MinIO 支持在 Kubernetes 中使用三种类型的 <a class="reference external" href="https://kubernetes.io/docs/concepts/configuration/secret/#secret-types">secrets</a>：</p>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">opaque</span></code></p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">private.key</span></code> 和 <code class="docutils literal notranslate"><span class="pre">public.crt</span></code> 文件。</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tls</span></code></p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">tls.key</span></code> 和 <code class="docutils literal notranslate"><span class="pre">tls.crt</span></code> 文件.</p>
+</li>
+<li><p><a class="reference external" href="https://cert-manager.io/">cert-manager</a> 1.7.x 更高版本</p>
+<p>在 Kubernetes 1.21 或更高版本上运行。</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>为了获得最佳的 <em>tls</em> 或 <em>cert-manager</em> 秘密支持，请升级到 Operator 版本 5.0.10 或更高版本。</p>
+</div>
+</div></blockquote>
+</section>
+<section id="id2">
+<h3>基于多个域的 TLS 证书<a class="headerlink" href="#id2" title="此标题的永久链接"></a></h3>
+<p>MinIO 服务器支持多个 TLS 证书，其中服务器在响应客户端请求时使用 <a class="reference external" href="https://en.wikipedia.org/wiki/Server_Name_Indication">服务器名称指示 (SNI)</a> 来确定使用哪个证书。
+当客户端使用特定的主机名连接时，MinIO 会使用 <abbr title="服务器名称指示">SNI</abbr> 来为该主机名选择合适的 TLS 证书。</p>
+<p>例如，考虑一个可以通过以下主机名访问的 MinIO 部署：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">https://minio.example.net</span></code> (默认 TLS 证书)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">https://s3.example.net</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">https://minio.internal-example.net</span></code></p></li>
+</ul>
+<p>将证书放置在 <code class="docutils literal notranslate"><span class="pre">/certs</span></code> 文件夹中，为 MinIO 应该呈现 TLS 证书的每个附加域在 <code class="docutils literal notranslate"><span class="pre">/certs</span></code> 中创建一个子文件夹。
+虽然 MinIO 对文件夹名称没有特定要求，但为了提高可读性，建议创建与域名匹配的子文件夹名称。
+将该域的 TLS 私钥和公钥放置在子文件夹中。</p>
+<p>这个文件夹的根路径取决于您是使用默认证书路径 <em>还是</em> 自定义证书路径（使用 <a class="reference internal" href="../reference/minio-server/minio-server.html#minio.server.-certs-dir" title="minio.server.--certs-dir"><code class="xref minio minio-mc-cmd docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span> <span class="pre">--certs-dir</span></code></a> 命令或 <code class="docutils literal notranslate"><span class="pre">-S</span></code> 参数）。</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-2">
+Default Certificate Path</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/.minio/certs
+private.key
+public.crt
+s3-example.net/
+<span class="w">   </span>private.key
+<span class="w">   </span>public.crt
+internal-example.net/
+<span class="w">   </span>private.key
+<span class="w">   </span>public.crt
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-3">
+Custom Certificate Path</label><div class="sd-tab-content docutils">
+<p>以下示例假设 MinIO 服务器是使用 <code class="docutils literal notranslate"><span class="pre">--certs</span> <span class="pre">dir</span> <span class="pre">|</span> <span class="pre">-S</span> <span class="pre">/opt/minio/certs</span></code> 参数启动的：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>/opt/minio/certs
+private.key
+public.crt
+s3-example.net/
+<span class="w">   </span>private.key
+<span class="w">   </span>public.crt
+internal-example.net/
+<span class="w">   </span>private.key
+<span class="w">   </span>public.crt
+</pre></div>
+</div>
+</div>
+</div>
+<p>虽然您可以拥有一个包含多个主题备用名称（SANs）的单一 TLS 证书，覆盖所有主机名，但这会将 <code class="docutils literal notranslate"><span class="pre">internal-example.net</span></code> 和 <code class="docutils literal notranslate"><span class="pre">s3-example.net</span></code> 这些主机名暴露给任何检查服务器证书的客户。
+为每个主机名使用一个 TLS 证书可以更好地保护每个单独的主机名不被发现。
+每个单独的 TLS 证书的 SANs <strong>必须</strong> 适用于它们各自父节点的主机名。</p>
+<p>如果客户端指定的主机名或IP地址与任何配置的TLS证书不匹配，连接通常会因证书验证错误而失败。</p>
+</section>
+<section id="minio-tls-supported-cipher-suites">
+<span id="id3"></span><h3>支持的 TLS 密码套件<a class="headerlink" href="#minio-tls-supported-cipher-suites" title="此标题的永久链接"></a></h3>
+<p>MinIO 建议生成 ECDSA（例如 <a class="reference external" href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-4.pdf">NIST P-256 曲线</a>）或 EdDSA（例如 <span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc7748.html"><strong>Curve25519</strong></a>）TLS 私钥/证书，因为与 RSA 相比，它们的计算要求较低。</p>
+<p>MinIO 支持 <a class="reference external" href="https://cs.opensource.google/go/go/+/refs/tags/go1.17.1:src/crypto/tls/cipher_suites.go;l=52">Go语言</a>。 这些列表用星形填充图标标记推荐的算法：</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-4">
+TLS 1.3</label><div class="sd-tab-content docutils">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CHACHA20_POLY1305_SHA256</span></code> <svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-star-fill" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path></svg></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_AES_128_GCM_SHA256</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_AES_256_GCM_SHA384</span></code></p></li>
+</ul>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-5">
+TLS 1.2</label><div class="sd-tab-content docutils">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305</span></code> <svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-star-fill" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path></svg></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256</span></code> <svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-star-fill" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path></svg></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384</span></code> <svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-star-fill" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path></svg></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</span></code></p></li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="minio-tls-third-party-ca">
+<span id="id4"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">第三方证书颁发机构</a><a class="headerlink" href="#minio-tls-third-party-ca" title="此标题的永久链接"></a></h2>
+<p>MinIO 服务器会验证每个连接客户端所呈现的 TLS 证书，以确保它们与主机系统的受信任根证书存储中的证书相对应。</p>
+<p>将 CA 证书放置在 <code class="docutils literal notranslate"><span class="pre">/certs/CAs</span></code> 文件夹中。
+这个文件夹的根路径取决于您是使用默认证书路径 <em>还是</em> 自定义证书路径（使用 <a class="reference internal" href="../reference/minio-server/minio-server.html#minio.server.-certs-dir" title="minio.server.--certs-dir"><code class="xref minio minio-mc-cmd docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span> <span class="pre">--certs-dir</span></code></a> 命令或 <code class="docutils literal notranslate"><span class="pre">-S</span></code> ）</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-6">
+Default Certificate Path</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mv<span class="w"> </span>myCA.crt<span class="w"> </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/certs/CAs
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-7">
+Custom Certificate Path</label><div class="sd-tab-content docutils">
+<p>以下示例假设 MinIO 服务器是使用 <code class="docutils literal notranslate"><span class="pre">--certs-dir</span> <span class="pre">/opt/minio/certs</span></code> 参数启动的：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mv<span class="w"> </span>myCA.crt<span class="w"> </span>/opt/minio/certs/CAs/
+</pre></div>
+</div>
+</div>
+</div>
+<p>将每个 CA 的证书文件放置到 <code class="docutils literal notranslate"><span class="pre">/CAs</span></code> 子目录中。
+确保 MinIO 部署中的所有主机在那个目录中有一致的受信任的 CA 集合。
+如果 MinIO 服务器无法将传入客户端的 TLS 证书发行者与任何可用的证书颁发机构（CA）进行匹配，服务器将拒绝该连接，认为其无效。</p>
+</section>
+<section id="cas">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">自签名、内部、私有证书以及带有中级证书的公共证书颁发机构（CAs）</a><a class="headerlink" href="#cas" title="此标题的永久链接"></a></h2>
+<p>如果使用的是非全局或非公共证书颁发机构签名的证书， <em>或者</em> 使用的是需要使用中级证书的全局证书颁发机构，那么您必须将这些证书颁发机构提供给 MinIO 服务器。
+如果 MinIO 服务器没有必要的证书颁发机构，当连接到其他服务时，它可能会返回与 TLS 验证相关的警告或错误。</p>
+<p>将 CA 证书放置在 <code class="docutils literal notranslate"><span class="pre">/certs/CAs</span></code> 文件夹中。
+这个文件夹的根路径取决于您是使用默认证书路径 <em>还是</em> 自定义证书路径（使用 <a class="reference internal" href="../reference/minio-server/minio-server.html#minio.server.-certs-dir" title="minio.server.--certs-dir"><code class="xref minio minio-mc-cmd docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span> <span class="pre">--certs-dir</span></code></a> 命令或 <code class="docutils literal notranslate"><span class="pre">-S</span></code> ）</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-8">
+Default Certificate Path</label><div class="sd-tab-content docutils">
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mv<span class="w"> </span>myCA.crt<span class="w"> </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/.minio/certs/CAs
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-9" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-9">
+Custom Certificate Path</label><div class="sd-tab-content docutils">
+<p>以下示例假设 MinIO 服务器是使用 <code class="docutils literal notranslate"><span class="pre">--certs-dir</span> <span class="pre">/opt/minio/certs</span></code> 参数启动的：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mv<span class="w"> </span>myCA.crt<span class="w"> </span>/opt/minio/certs/CAs/
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>请勿使用或共享自签名证书的私钥。
+出于信任目的，只能共享或分发公共证书。</p>
+</div>
+<p>如果提供的文件不是 X.509 证书，MinIO 会忽略它，并可能返回验证该 CA 签名的证书的错误。</p>
+</section>
+</section>
+
+<div class="footer">
+   本作品已获得许可
+   <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">知识共享归属 4.0 国际许可证。</a>
+   2020-至今。MinIO Inc英文创作， <a href="https://www.minio.org.cn">MinIO中国</a> 团队（北京京厂科技有限公司）进行汉化
+   <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+      <img height="10" alt="Creative Commons License" src="https://js.minio.org.cn/80x15.png" />
+   </a>
+ </div>
+
+ <!--<script src="https://www.minio.org.cn/docs/static/jiucuo-zn.js"></script>-->
+ 
+ <a target="_blank" href="https://tb.53kf.com/code/client/851fb0c79d6722d0cb5a9649182512534/1" rel="noreferrer" class="footer__widget" id="join-slack">
+   <img loading="lazy" width="20" height="19" src="https://www.minio.org.cn/resources/img/footer/slack.svg" alt="Join Slack">
+   <span>商业支持购买咨询</span>
+</a>
+         </div>
+      </div>
+   </section>
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?c79c36d1dec2257e69e09c8a2e2110e8";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+         </div>
+      </div>
+   </section><div id="cookie">
+    <div class="container">
+        <div class="cookie__text">
+            <strong>您的隐私对我们非常重要：</strong>
+            我们使用cookies以便为您提供更好的体验。如果您希望，您随时可以查阅我们的
+            <a target="_blank" rel="noreferrer noopener" href="https://www.minio.org.cn/privacy-policy">  隐私政策。</a>.
+        </div>
+
+        <button type="button" id="cookie__btn">同意</button>
+    </div>
+</div>
+<script>
+    // Dark mode and read mode detection
+
+    // Dark mode
+    var isDarkMode = localStorage.getItem("dark-mode");
+    var dmToggleBtn = document.getElementById("dark-mode-toggle");
+    if (isDarkMode === "true") {
+       document.documentElement.classList.add("dark-mode");
+       dmToggleBtn.classList.add("active");
+    }
+
+    // Read mode
+    var isReadMode = localStorage.getItem("read-mode");
+    var rmToggleBtn = document.getElementById("read-mode-toggle");
+
+    if (isReadMode === "true") {
+        document.documentElement.classList.add("read-mode");
+        rmToggleBtn.classList.add("active");
+    }
+ </script>
+  </body>
+</html>

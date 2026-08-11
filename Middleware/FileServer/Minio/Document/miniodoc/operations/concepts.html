@@ -1,0 +1,712 @@
+
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>核心运营概念 &#8212; MinIO中文文档 | MinIO Linux中文文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/main.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>
+    <script defer="defer" src="../_static/js/main.js"></script>
+    <script defer="defer" src="../_static/js/instantSearch.js"></script>
+    <link rel="canonical" href="http://www.minio.org.cn/docs/minio/linux/operations/concepts.html" />
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="部署架构" href="concepts/architecture.html" />
+    <link rel="prev" title="从网关或文件系统模式迁移" href="install-deploy-manage/migrate-fs-gateway.html" /><!-- Algolia meta attrs -->
+<meta name="docsearch:platform" content="linux"/>
+<meta name="docsearch:version" content="linux"/>
+<meta name="pagename" content="operations/concepts"/>
+
+<!-- Preload fonts and scripts -->
+<link rel="preload" href="../_static/fonts/inter/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../_static/fonts/inter/Inter-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../_static/fonts/inter/Inter-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preconnect" href="https://WDBGN0FV99-dsn.algolia.net" crossorigin />
+<link rel="stylesheet" type="text/css" href="https://www.minio.org.cn/docs/static/jiucuo.css" />
+
+   
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head><body><header class="header inactive">
+   <div class="container">
+      <div class="header__top">
+         <a href="/" class="header__logo">
+           <svg viewBox="0 0 162.612 24.465">
+              <path d="M52.751.414h9.108v23.63h-9.108zM41.711.74l-18.488 9.92a.919.919 0 0 1-.856 0L3.879.74A2.808 2.808 0 0 0 2.558.414h-.023A2.4 2.4 0 0 0 0 2.641v21.376h9.1V13.842a.918.918 0 0 1 1.385-.682l10.361 5.568a3.634 3.634 0 0 0 3.336.028l10.933-5.634a.917.917 0 0 1 1.371.69v10.205h9.1V2.641A2.4 2.4 0 0 0 43.055.414h-.023a2.808 2.808 0 0 0-1.321.326zm65.564-.326h-9.237v10.755a.913.913 0 0 1-1.338.706L72.762.675a2.824 2.824 0 0 0-1.191-.261h-.016a2.4 2.4 0 0 0-2.535 2.227v21.377h9.163V13.275a.914.914 0 0 1 1.337-.707l24.032 11.2a2.813 2.813 0 0 0 1.188.26 2.4 2.4 0 0 0 2.535-2.227zm7.161 23.63V.414h4.191v23.63zm28.856.421c-11.274 0-19.272-4.7-19.272-12.232C124.02 4.741 132.066 0 143.292 0s19.32 4.7 19.32 12.233-7.902 12.232-19.32 12.232zm0-21.333c-8.383 0-14.84 3.217-14.84 9.1 0 5.926 6.457 9.1 14.84 9.1s14.887-3.174 14.887-9.1c0-5.883-6.504-9.1-14.887-9.1z" />
+           </svg>
+         </a>
+         <!--
+         <div class="header__docs">
+           <div class="header__docs__current">
+                    MinIO中文文档<svg viewBox="0 0 9 5" width="9" height="5">
+    <path d="M8.071.135a.562.562 0 1 1 .733.855L4.866 4.365a.562.562 0 0 1-.732 0L.196.99A.562.562 0 1 1 .93.135L4.5 3.197 8.071.135z" fill="currentColor" fill-rule="evenodd" />
+</svg>
+                 </div>
+           <nav class="header__docs__menu">
+              
+                 
+                 <a target="" class="current" href="">                  
+                    MinIO中文文档
+                 </a>
+              
+                 
+                 <a target="_blank" class="" href="https://minio.org.cn/docs/directpv">                  
+                    DirectPV 文档
+                 </a>
+              
+                 
+                 <a target="_blank" class="" href="https://minio.org.cn/docs/kes">                  
+                    KES文档
+                 </a>
+              
+           </nav>
+         </div>
+         -->
+
+         <nav class="nav hidden-rm">
+            <a target="_blank" rel="noreferrer" href="https://subnet.minio.org.cn/" class="nav__link">
+               <span>商业客户登录</span>
+            </a>
+         </nav>
+
+         <div class="header__actions">
+           <button data-aside-toggle="nav" type="button" class="icon visible-rm"><svg width="17" height="13" viewbox="0 0 17 13">
+    <path d="M16.034 0H.966C.433 0 0 .346 0 .773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773S16.567 0 16.034 0zm0 5.409H.966c-.533 0-.966.346-.966.773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773s-.433-.773-.966-.773zm0 5.409H.966c-.533 0-.966.346-.966.773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773s-.433-.773-.966-.773z" />
+</svg>
+              菜单
+           </button>
+
+           <button id="dark-mode-toggle" type="button" class="icon icon--switch"><svg width="21" height="21" viewBox="0 0 48 48" fill="currentColor">
+    <path d="M24 42q-7.5 0-12.75-5.25T6 24q0-6.75 3.975-11.45Q13.95 7.85 20.4 6.5q2.05-.4 2.8.7t-.05 3q-.45 1.15-.7 2.35-.25 1.2-.25 2.45 0 4.5 3.15 7.65Q28.5 25.8 33 25.8q1.25 0 2.425-.225 1.175-.225 2.275-.625 2.15-.8 3.2.075 1.05.875.55 2.975-1.35 6.05-6.05 10.025Q30.7 42 24 42Zm0-3q5.45 0 9.5-3.375t5.05-7.925q-1.25.55-2.675.825Q34.45 28.8 33 28.8q-5.75 0-9.775-4.025T19.2 15q0-1.2.25-2.575.25-1.375.9-3.125-4.9 1.35-8.125 5.475Q9 18.9 9 24q0 6.25 4.375 10.625T24 39Zm-.2-14.85Z" />
+</svg><svg width="17" height="17" viewBox="0 0 17 17">
+    <path d="M8.5 2.898c-.167 0-.306-.055-.415-.164s-.164-.248-.164-.415V.58c0-.167.055-.306.164-.415S8.333 0 8.5 0s.306.055.415.164.164.248.164.415v1.739c0 .167-.055.306-.164.415s-.248.164-.415.164zm3.96 1.642c-.116-.116-.174-.251-.174-.406s.058-.29.174-.406l1.217-1.236c.116-.116.254-.174.415-.174s.299.058.415.174.174.251.174.406-.058.29-.174.406L13.272 4.54c-.116.116-.251.174-.406.174s-.29-.058-.406-.174zm2.222 4.54c-.167 0-.306-.055-.415-.164s-.164-.248-.164-.415.055-.306.164-.415.248-.164.415-.164h1.739c.167 0 .306.055.415.164S17 8.333 17 8.5s-.055.306-.164.415-.248.164-.415.164h-1.739zM8.5 17c-.167 0-.306-.055-.415-.164s-.164-.248-.164-.415v-1.739c0-.167.055-.306.164-.415s.248-.164.415-.164.306.055.415.164.164.248.164.415v1.739c0 .167-.055.306-.164.415S8.667 17 8.5 17zM3.728 4.54L2.492 3.323c-.116-.116-.174-.254-.174-.415s.058-.299.174-.415.251-.174.406-.174.29.058.406.174L4.54 3.728c.116.116.174.251.174.406s-.058.29-.174.406c-.116.103-.254.155-.415.155s-.293-.052-.396-.155zm9.968 9.968l-1.236-1.236c-.116-.116-.174-.251-.174-.406s.058-.29.174-.406c.103-.103.235-.155.396-.155s.299.052.415.155l1.256 1.217c.116.116.171.254.164.415s-.061.299-.164.415c-.116.116-.254.174-.415.174s-.299-.058-.415-.174h0zM.58 9.08c-.167 0-.306-.055-.415-.164S0 8.667 0 8.5s.055-.306.164-.415.248-.164.415-.164h1.739c.167 0 .306.055.415.164s.164.248.164.415-.055.306-.164.415-.248.164-.415.164H.58zm1.912 5.428c-.116-.116-.174-.251-.174-.406s.058-.29.174-.406l1.236-1.236c.103-.103.235-.155.396-.155s.299.052.415.155c.116.116.174.254.174.415s-.058.299-.174.415l-1.217 1.217c-.116.116-.254.174-.415.174s-.299-.058-.415-.174h0zM8.5 13.136a4.47 4.47 0 0 1-3.284-1.352A4.47 4.47 0 0 1 3.864 8.5a4.47 4.47 0 0 1 1.352-3.284A4.47 4.47 0 0 1 8.5 3.864a4.47 4.47 0 0 1 3.284 1.352A4.47 4.47 0 0 1 13.136 8.5a4.47 4.47 0 0 1-1.352 3.284A4.47 4.47 0 0 1 8.5 13.136zm0-1.159a3.35 3.35 0 0 0 2.463-1.014A3.35 3.35 0 0 0 11.977 8.5a3.35 3.35 0 0 0-1.014-2.463A3.35 3.35 0 0 0 8.5 5.023a3.35 3.35 0 0 0-2.463 1.014A3.35 3.35 0 0 0 5.023 8.5a3.35 3.35 0 0 0 1.014 2.463A3.35 3.35 0 0 0 8.5 11.977z" fill="currentColor" />
+</svg>
+                 夜间模式
+           </button>
+
+           <button id="read-mode-toggle" type="button" class="icon icon--switch"><svg width="17" height="15" viewBox="0 0 18 16" fill="none">
+    <path d="M4.09286 12.7785C4.87857 12.7785 5.63929 12.8949 6.375 13.1275C7.11071 13.3602 7.83571 13.7181 8.55 14.2013V2.97987C7.90714 2.40716 7.2 1.97315 6.42857 1.67785C5.65714 1.38255 4.87857 1.2349 4.09286 1.2349C3.55 1.2349 3.05357 1.29754 2.60357 1.42282C2.15357 1.5481 1.67143 1.72707 1.15714 1.95973C1.08571 1.99553 1.03571 2.04027 1.00714 2.09396C0.978571 2.14765 0.964286 2.20134 0.964286 2.25503V13.1544C0.964286 13.2438 0.992857 13.311 1.05 13.3557C1.10714 13.4004 1.17143 13.4139 1.24286 13.396C1.6 13.1812 2.02857 13.0246 2.52857 12.9262C3.02857 12.8277 3.55 12.7785 4.09286 12.7785ZM9.51429 14.2013C10.2429 13.7181 10.9607 13.3602 11.6679 13.1275C12.375 12.8949 13.1214 12.7785 13.9071 12.7785C14.45 12.7785 14.975 12.8277 15.4821 12.9262C15.9893 13.0246 16.4143 13.1454 16.7571 13.2886C16.8286 13.3244 16.8929 13.3199 16.95 13.2752C17.0071 13.2304 17.0357 13.1544 17.0357 13.047V2.25503C17.0357 2.20134 17.0214 2.14765 16.9929 2.09396C16.9643 2.04027 16.9143 1.99553 16.8429 1.95973C16.3714 1.70917 15.9 1.52573 15.4286 1.4094C14.9571 1.29306 14.45 1.2349 13.9071 1.2349C13.1214 1.2349 12.3536 1.38255 11.6036 1.67785C10.8536 1.97315 10.1571 2.40716 9.51429 2.97987V14.2013ZM9.70386 15.4635C9.29873 15.7533 8.74672 15.7502 8.34198 15.4599C7.82063 15.0859 7.26854 14.7782 6.68571 14.5369C5.84286 14.1879 4.97857 14.0134 4.09286 14.0134C3.63571 14.0134 3.18214 14.0761 2.73214 14.2013C2.28214 14.3266 1.82857 14.4787 1.37143 14.6577C1.04286 14.8546 0.732143 14.8233 0.439286 14.5638C0.146429 14.3043 0 13.9418 0 13.4765V2.1745C0 1.88814 0.0571429 1.62864 0.171429 1.39597C0.285714 1.16331 0.442857 0.98434 0.642857 0.859061C1.18571 0.572707 1.74643 0.357942 2.325 0.214765C2.90357 0.0715887 3.49286 0 4.09286 0C4.97857 0 5.83929 0.1566 6.675 0.469799C7.51071 0.782998 8.3 1.2528 9.04286 1.87919C9.75714 1.2528 10.5286 0.782998 11.3571 0.469799C12.1857 0.1566 13.0357 0 13.9071 0C14.5071 0 15.0929 0.0715887 15.6643 0.214765C16.2357 0.357942 16.7929 0.572707 17.3357 0.859061C17.55 0.98434 17.7143 1.16331 17.8286 1.39597C17.9429 1.62864 18 1.88814 18 2.1745V13.4765C18 13.9597 17.8393 14.3311 17.5179 14.5906C17.1964 14.8501 16.8786 14.8725 16.5643 14.6577C16.1214 14.4609 15.6786 14.3043 15.2357 14.1879C14.7929 14.0716 14.35 14.0134 13.9071 14.0134C13.0214 14.0134 12.1679 14.1879 11.3464 14.5369C10.7766 14.779 10.229 15.0879 9.70386 15.4635Z" fill="currentColor" />
+</svg><svg width="17" height="15" viewBox="0 0 18 16">
+    <path d="M4.09286 12.7785C4.87857 12.7785 5.63929 12.8949 6.375 13.1275C7.11071 13.3602 7.83571 13.7181 8.55 14.2013V2.97987C7.90714 2.40716 7.2 1.97315 6.42857 1.67785C5.65714 1.38255 4.87857 1.2349 4.09286 1.2349C3.55 1.2349 3.05357 1.29754 2.60357 1.42282C2.15357 1.5481 1.67143 1.72707 1.15714 1.95973C1.08571 1.99553 1.03571 2.04027 1.00714 2.09396C0.978571 2.14765 0.964286 2.20134 0.964286 2.25503V13.1544C0.964286 13.2438 0.992857 13.311 1.05 13.3557C1.10714 13.4004 1.17143 13.4139 1.24286 13.396C1.6 13.1812 2.02857 13.0246 2.52857 12.9262C3.02857 12.8277 3.55 12.7785 4.09286 12.7785ZM9.51429 14.2013C10.2429 13.7181 10.9607 13.3602 11.6679 13.1275C12.375 12.8949 13.1214 12.7785 13.9071 12.7785C14.45 12.7785 14.975 12.8277 15.4821 12.9262C15.9893 13.0246 16.4143 13.1454 16.7571 13.2886C16.8286 13.3244 16.8929 13.3199 16.95 13.2752C17.0071 13.2304 17.0357 13.1544 17.0357 13.047V2.25503C17.0357 2.20134 17.0214 2.14765 16.9929 2.09396C16.9643 2.04027 16.9143 1.99553 16.8429 1.95973C16.3714 1.70917 15.9 1.52573 15.4286 1.4094C14.9571 1.29306 14.45 1.2349 13.9071 1.2349C13.1214 1.2349 12.3536 1.38255 11.6036 1.67785C10.8536 1.97315 10.1571 2.40716 9.51429 2.97987V14.2013ZM9.70386 15.4635C9.29873 15.7533 8.74672 15.7502 8.34198 15.4599C7.82063 15.0859 7.26854 14.7782 6.68571 14.5369C5.84286 14.1879 4.97857 14.0134 4.09286 14.0134C3.63571 14.0134 3.18214 14.0761 2.73214 14.2013C2.28214 14.3266 1.82857 14.4787 1.37143 14.6577C1.04286 14.8546 0.732143 14.8233 0.439286 14.5638C0.146429 14.3043 0 13.9418 0 13.4765V2.1745C0 1.88814 0.0571429 1.62864 0.171429 1.39597C0.285714 1.16331 0.442857 0.98434 0.642857 0.859061C1.18571 0.572707 1.74643 0.357942 2.325 0.214765C2.90357 0.0715887 3.49286 0 4.09286 0C4.97857 0 5.83929 0.1566 6.675 0.469799C7.51071 0.782998 8.3 1.2528 9.04286 1.87919C9.75714 1.2528 10.5286 0.782998 11.3571 0.469799C12.1857 0.1566 13.0357 0 13.9071 0C14.5071 0 15.0929 0.0715887 15.6643 0.214765C16.2357 0.357942 16.7929 0.572707 17.3357 0.859061C17.55 0.98434 17.7143 1.16331 17.8286 1.39597C17.9429 1.62864 18 1.88814 18 2.1745V13.4765C18 13.9597 17.8393 14.3311 17.5179 14.5906C17.1964 14.8501 16.8786 14.8725 16.5643 14.6577C16.1214 14.4609 15.6786 14.3043 15.2357 14.1879C14.7929 14.0716 14.35 14.0134 13.9071 14.0134C13.0214 14.0134 12.1679 14.1879 11.3464 14.5369C10.7766 14.779 10.229 15.0879 9.70386 15.4635Z" fill="currentColor" />
+    <path d="M9 3C6.2 -0.599997 2.16667 0.833336 0.5 2L1 14L5 13L9 15V3Z" fill="currentColor" />
+</svg>
+                 Reading Mode
+           </button>
+         </div>
+      </div><div class="nav">
+    <div class="hide-aside visible-rm">
+        <button type="button" class="icon"><svg width="12" height="12">
+    <path d="M11.253 1.691L10.125.563 5.653 5.035 1.181.563.053 1.691l4.472 4.472-4.472 4.472 1.128 1.128 4.472-4.472 4.472 4.472 1.128-1.128-4.472-4.472z" fill-rule="evenodd"></path>
+</svg>
+            关闭导航
+        </button>
+    </div>
+
+    <a target="_blank" rel="noreferrer" href="https://subnet.minio.org.cn/" class="nav__link visible-rm">
+        <span>商业客户</span>
+    </a>
+
+    <div class="nav__item">
+        <div class="nav__link nav__link--dropdown">
+             <span>产品</span>
+        </div>
+
+        <div class="nav__dropdown nav__dropdown--product">
+            <div class="nav__dropdown__inner">
+                <div class="nav__feature">
+                    <div class="nav__column">
+                    
+                    <div class="nav__column__title">多云</div>
+       
+                                <a href="/product/kubernetes.html" class="nav__sub" data-nav="k8s">支持Kubernetes 的 MinIO</a>
+                                <a href="/product/private-cloud-vmware-tanzu.html" class="nav__sub" data-nav="vm-tanzu">支持VMware Tanzu 的 MinIO</a>
+                                <a href="/product/private-cloud-red-hat-openshift.html" class="nav__sub" data-nav="open-shift">支持OpenShift 的 MinIO</a>
+                                <a href="/product/multicloud-suse-rancher.html" class="nav__sub" data-nav="multicloud-suse-rancher">支持SUSE Rancher 的 MinIO</a>
+                                <a href="/product/multicloud-elastic-kubernetes-service.html" class="nav__sub" data-nav="elastic-kubernetes-service">亚马逊云 Elastic Kubernetes 服务的 MinIO</a>
+                                <a href="/product/multicloud-azure-kubernetes-service.html" class="nav__sub" data-nav="azure-kubernetes-service">微软云 Kubernetes 服务的 MinIO</a>
+                                <a href="/product/multicloud-google-kubernetes-service.html" class="nav__sub" data-nav="google-kubernetes-engine">谷歌 Kubernetes Engine 的 MinIO</a>
+                 </div>
+
+                    <i class="nav__separator"></i>
+
+                    <div class="nav__column">
+                        <div class="nav__column__title">新特性</div>
+
+                        <a href="/product/active-data-replication-for-object-storage.html" class="nav__sub" data-nav="multi-site-replication">多地复制</a>
+                       <a href="/product/identity-and-access-management.html" class="nav__sub" data-nav="global-identity-access-management">全球身份和访问管理</a>
+                        <a href="/product/enterprise-object-storage-encryption.html" class="nav__sub" data-nav="encryption">加密</a>
+                        <a href="/product/data-immutability-for-object-storage.html" class="nav__sub" data-nav="object-immutability">存储桶和对象不变性</a>
+                        <a href="/product/object-versioning-bucket-versioning.html" class="nav__sub" data-nav="versioning">存储桶和对象版本控制</a>
+                        <a href="/product/automated-data-tiering-lifecycle-management.html" class="nav__sub" data-nav="life-cycle">数据生命周期管理和分层</a>
+                        <a href="/product/automated-cloud-data-management-interface.html" class="nav__sub" data-nav="interface">自动化数据管理界面</a>
+                        <a href="/product/object-storage-performance-monitoring.html" class="nav__sub" data-nav="monitoring">监控</a>
+                        <a href="/product/scalable-object-storage.html" class="nav__sub" data-nav="scalable">可扩展性</a>
+                        <a href="/product/s3-compatibility.html" class="nav__sub" data-nav="s3-compatibility">亚马逊云 S3 兼容性</a>
+                    </div>
+
+                    <div class="nav__column">
+                        <div class="nav__sub" data-nav="hybrid-cloud-storage">
+                            <a href="/hybrid-cloud-storage.html" class="nav__lead">
+                                <img width="30" height="23" src="/_static/img/nav/hybrid-cloud.svg" alt="混合云对象存储">
+                                混合云对象存储
+                            </a>
+                            <div class="nav__jump">
+                                <a href="hybrid-cloud-storage.html#overview">概述</a>
+                                <a href="hybrid-cloud-storage.html#architecture">架构</a>
+                            </div>
+                        </div>
+                        <div class="nav__sub" data-nav="overview">
+                           <a href="/product/overview.html" class="nav__lead">
+                                <img width="30" height="25" src="/_static/img/nav/baremetal.svg" alt="Baremetal">
+                                裸机
+                            </a>
+                            <div class="nav__jump">
+                               <a href="/product/overview.html#features">概览</a>
+                               <a href="/product/overview.html#architecture">架构</a>
+                            </div>
+                        </div>
+                       <a href="/product/erasure-code-calculator.html" class="nav__sub nav__lead" data-nav="erasure-code-calculator">
+                            <img width="30" height="24" class="h-6" src="/_static/img/nav/erasure-code-calculator.svg" alt="纠删码计算器">
+                            纠删码计算器
+                        </a>
+                       <a href="/product/reference-hardware.html" class="nav__sub nav__lead" data-nav="reference-hardware">
+                            <img width="30" height="18" src="/_static/img/nav/ref-hardware.svg" alt="参考硬件">
+                            参考硬件
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="nav__item">
+        <div class="nav__link nav__link--dropdown">
+            <span>解决方案</span> 
+
+                    <div class="nav__dropdown">
+                        <div class="nav__dropdown__inner">
+                            <a href="/solutions/modern-data-lakes-lakehouses.html" class="nav__sub" data-nav="datalakes">
+                                <span>现代数据湖</span>
+                                <small>现代多引擎数据湖依赖于提供大规模性能的对象存储。了解有关此核心 MinIO 用例的更多信息。</small>
+                            </a>
+                            <a href="/solutions/object-storage-for-ai.html" class="nav__sub" data-nav="ai-ml">
+                                <span>AI&ML</span>
+                                <small>对象存储正在推动人工智能革命。了解 MinIO 如何通过大规模性能来引领这一努力。</small>
+                            </a>
+                            <a href="/product/integrations.html" class="nav__sub" data-nav="integrations">
+                                <span>集成</span>
+                                <small>浏览我们广泛的集成产品组合</small>
+                            </a>
+                            <a href="/solutions/sqlserver.html" class="nav__sub" data-nav="sql-server">
+                                <span>SQL Server</span>
+                                <small>了解如何将 SQL Server 2022 与 MinIO 配对，以便在任何云上对数据运行查询，而无需移动数据。</small>
+                            </a>
+                            <a href="/solutions/commvault.html" class="nav__sub" data-nav="commvault">
+                                <span>Commvault(康沃)</span>
+                                <small>了解 Commvault 和 MinIO 如何合作，为任务关键型备份和恢复工作负载提供大规模性能。</small>
+                            </a>
+                            <a href="/solutions/snowflake.html" class="nav__sub" data-nav="snowflake">
+                                <span>snowflake(雪花)</span>
+                                <small>使用雪花数据云查询和分析驻留在 MinIO 上的多个数据源，包括流数据。无需移动数据，只需使用 SnowSQL 进行查询即可。</small>
+                            </a>
+                            <a href="/solutions/optimize-splunk-smartstore-performance.html" class="nav__sub" data-nav="splunk">
+                                <span>Splunk(斯普伦克)</span>
+                                <small>了解 MinIO 如何为 Splunk 智能商店提供大规模性能</small>
+                            </a>
+                            <a href="/solutions/veeam.html" class="nav__sub" data-nav="veeam">
+                                <span>Veeam</span>
+                                <small>了解 MinIO 和 Veeam 如何合作，为各种备份用例提高性能和可扩展性。</small>
+                            </a>
+                            <a href="/solutions/hdfs-migration.html" class="nav__sub" data-nav="hdfs-migration">
+                                <span>HDFS 迁移</span>
+                                <small>利用 MinIO 的高性能 Kubernetes 原生对象存储实现大数据存储基础架构的现代化和简化。</small>
+                            </a>
+                            <a href="/solutions/vmware.html" class="nav__sub" data-nav="vmware">
+                                <span>VMware</span>
+                                <small>了解 MinIO 如何在从持久数据平台到 TKGI 的整个产品组合中与 VMware 集成，以及我们如何支持他们的 Kubernetes 雄心壮志。</small>
+                            </a>
+                        </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="/docs/cn/minio/linux/" class="nav__link nav__link--active">
+        <span>文档</span>
+    </a>
+
+    <a href="https://blog.minio.org.cn/" class="nav__link">
+        <span>博客</span>
+    </a>
+
+    <a href="https://resources.minio.org.cn" class="nav__link" data-href="resources" target="_blank">
+        <span>资源</span>
+    </a>
+
+    <a href="https://dl.minio.org.cn/" class="nav__link" data-href="mirrors" target="_blank">
+        <span>中国加速镜像</span>
+    </a>
+
+    <a href="/pricing.shtml" class="nav__link" data-href="pricing" target="_blank">
+        <span>价格</span>
+    </a>
+
+    <a class="nav__link nav__link--download" href="/download.shtml" target="_blank">下载</a>
+</div>
+
+      <h2 class="header__title hidden-rm">中文文档</h2>
+      <div id="search">
+        <div class="search__inner">
+           <div id="search-box"></div>
+           
+           <div class="search__dropdown">
+              <div id="search-filters"></div>
+              <div id="search-clear"></div>
+              <div id="search-results"></div>
+              <div id="search-powered-by"></div>
+           </div>
+        </div>
+      </div>
+   </div><div class="platform-nav">
+    <div class="platform-nav__main">
+        <div class="container">
+            <nav>
+                <a rel="noreferrer" href="/docs/minio/kubernetes/upstream/index.html" class="">
+                    <img class="hidden-rm" src="../_static/img/icons/kubernetes.svg" alt="Kubernetes" />
+                    <img class="hidden-rm" src="../_static/img/icons/kubernetes-inactive.svg" alt="Kubernetes" />
+                    Kubernetes
+                </a>
+                
+                <a rel="noreferrer" href="/docs/minio/container/index.html" class="">
+                    <img class="hidden-rm" src="../_static/img/icons/docker.svg" alt="Docker" />
+                    <img class="hidden-rm" src="../_static/img/icons/docker-inactive.svg" alt="Docker" />
+                    Docker
+                </a>
+            
+                <a rel="noreferrer" href="/docs/minio/linux/index.html" class="active">
+                    <img class="hidden-rm" src="../_static/img/icons/linux.svg" alt="Linux" />
+                    <img class="hidden-rm" src="../_static/img/icons/linux-inactive.svg" alt="Linux" />
+                    Linux
+                </a>
+            
+                <a rel="noreferrer" href="/docs/minio/macos/index.html" class="">
+                    <img class="hidden-rm" src="../_static/img/icons/macos.svg" alt="macOS" />
+                    <img class="hidden-rm" src="../_static/img/icons/macos-inactive.svg" alt="macOS" />
+                    macOS
+                </a>
+            
+                <a rel="noreferrer" href="/docs/minio/windows/index.html" class="">
+                    <img class="hidden-rm" src="../_static/img/icons/windows.svg" alt="Windows" />
+                    <img class="hidden-rm" src="../_static/img/icons/windows-inactive.svg" alt="Windows" />
+                    Windows
+                </a>
+            </nav>
+        </div>
+        <button type="button" class="icon search-toggle search-toggle--keyboard visible-rm"><svg width="14" height="15">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 6.5a5 5 0 1 1-10 0 5 5 0 0 1 10 0Zm-1.59 5.535a6.5 6.5 0 1 1 1.179-.931l1.845 2.096a.75.75 0 0 1-1.127.99L9.91 12.036Z"/>
+</svg>
+            Search
+        </button>
+    </div></div>
+</header>
+   <section class="content">
+      <div class="container">
+         <div class="sidebar inactive scrollbar">
+            <div class="hide-aside visible-rm">
+               <button type="button" class="icon"><svg width="12" height="12">
+    <path d="M11.253 1.691L10.125.563 5.653 5.035 1.181.563.053 1.691l4.472 4.472-4.472 4.472 1.128 1.128 4.472-4.472 4.472 4.472 1.128-1.128-4.472-4.472z" fill-rule="evenodd"/>
+</svg>
+                     关闭文档导航
+               </button>
+            </div>
+
+            <a class="sidebar__title" href="../index.html">MinIO Linux中文文档</a>
+            
+            
+      <nav
+         class="docs"
+         role="navigation"
+      >
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">安装和部署MinIO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manage-existing-deployments.html">管理现有的MinIO部署</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">核心运营概念</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concepts/architecture.html">部署架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/availability-and-resiliency.html">可用性和弹性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/erasure-coding.html">纠删码（Erasure Coding）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/healing.html">Object Healing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/scanner.html">Object Scanner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/thresholds.html">阈值和限制</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">监控和警报</a></li>
+<li class="toctree-l1"><a class="reference internal" href="external-iam.html">外部身份管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server-side-encryption.html">数据加密（SSE）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network-encryption.html">网络加密（TLS）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="checklists.html">布署检查清单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-recovery.html">硬件故障和恢复办法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/minio-console.html">概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/minio-console.html#id3">配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/minio-console.html#minio-console-play-login">登录</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/minio-console.html#id6">文档</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/minio-console.html#id7">可用任务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/object-management.html">对象管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/monitoring.html">监控存储桶和对象事件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/identity-access-management.html">身份和访问管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/server-side-encryption.html">服务器端对象加密</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/bucket-replication.html">桶复制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/batch-framework.html">批处理框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/concepts.html">核心管理概念</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers/minio-drivers.html">软件开发工具包（SDK）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/security-token-service.html">安全令牌服务（STS）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/transforms-with-object-lambda.html">使用对象 Lambda 进行转换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/file-transfer-protocol.html">文件传输协议(FTP/SFTP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/minio-mc.html">MinIO客户端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/minio-mc-admin.html">MinIO 管理客户端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/minio-mc-deprecated.html">废弃的命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/minio-server/minio-server.html">MinIO服务器命令介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/s3-api-compatibility.html">S3 API 兼容性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrations/integrations.html">集成</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">词汇表</a></li>
+</ul>
+
+      </nav>
+         </div><div class="content__toc scrollbar scrollbar--hover">
+  	<button data-aside-toggle="doc" class="icon" type="button"><svg width="17" height="13" viewbox="0 0 17 13">
+    <path d="M16.034 0H.966C.433 0 0 .346 0 .773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773S16.567 0 16.034 0zm0 5.409H.966c-.533 0-.966.346-.966.773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773s-.433-.773-.966-.773zm0 5.409H.966c-.533 0-.966.346-.966.773s.433.773.966.773h15.068c.533 0 .966-.346.966-.773s-.433-.773-.966-.773z" />
+</svg> TOC Menu
+  	</button>
+
+  	<div id="content-toc"></div>
+		<button class="icon search-toggle" type="button"><svg width="14" height="15">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 6.5a5 5 0 1 1-10 0 5 5 0 0 1 10 0Zm-1.59 5.535a6.5 6.5 0 1 1 1.179-.931l1.845 2.096a.75.75 0 0 1-1.127.99L9.91 12.036Z"/>
+</svg> 搜索
+		</button>
+</div>
+
+         <div class="content__main">
+            
+  <section id="id1">
+<h1>核心运营概念<a class="headerlink" href="#id1" title="此标题的永久链接"></a></h1>
+<nav class="contents local" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#minio" id="id13">MinIO部署的组件包括哪些呢？</a></p></li>
+<li><p><a class="reference internal" href="#id2" id="id14">MinIO支持哪些系统拓扑结构？</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id15">分布式的MinIO部署如何工作？</a></p>
+<ul>
+<li><p><a class="reference internal" href="#minio-intro-server-pool" id="id16">MinIO如何管理多个虚拟或物理服务器？</a></p></li>
+<li><p><a class="reference internal" href="#miniominio" id="id17">MinIO如何将多个服务器池链接成单个MinIO集群？</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id18">我可以更改现有MinIO部署的大小吗？</a></p></li>
+<li><p><a class="reference internal" href="#id8" id="id19">我该如何管理一个或多个MinIO实例或集群？</a></p></li>
+<li><p><a class="reference internal" href="#minio-rebalance" id="id20">我该如何管理MinIO部署中的对象分布？</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#id10" id="id21">如何上传一个对象到MinIO?</a></p></li>
+<li><p><a class="reference internal" href="#minio-minio" id="id22">经过10年，全世界都认可MinIO的可用性和稳定性，那么MinIO是如何保障高可用、冗余性和数据持久性的?</a></p>
+<ul>
+<li><p><a class="reference internal" href="#minio-erasure-coding" id="id23">MinIO使用 <a class="reference internal" href="concepts/erasure-coding.html#minio-erasure-coding"><span class="std std-ref">Erasure Coding(纠删码)</span></a> 保障数据的安全、冗余和持久性。</a></p></li>
+<li><p><a class="reference internal" href="#minio-bit-rot" id="id24">MinIO使用腐位保护(Bit Rot)修复和保护静态数据</a></p></li>
+<li><p><a class="reference internal" href="#minio-erasure-sets" id="id25">MinIO分布式数据保护请阅读 <a class="reference internal" href="concepts/erasure-coding.html#minio-ec-erasure-set"><span class="std std-ref">纠删码（Erasure Sets）</span></a> 了解我们的高可用和数据保护策略。</a></p></li>
+<li><p><a class="reference internal" href="#id11" id="id26">MinIO 自动即时修复损坏或丢失的数据</a></p></li>
+<li><p><a class="reference internal" href="#id12" id="id27">MinIO 通过奇偶校验在对象级别写入数据保护</a></p></li>
+<li><p><a class="reference internal" href="#quorum" id="id28">通过 Quorum 提供读写功能</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="minio">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">MinIO部署的组件包括哪些呢？</a><a class="headerlink" href="#minio" title="此标题的永久链接"></a></h2>
+<p>一个MinIO部署由一组存储和计算资源组成，运行一个或多个  <a class="reference internal" href="../reference/minio-server/minio-server.html#command-minio.server" title="minio.server"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span></code></a>  节点，共同作为单个对象存储库。</p>
+<p>独立的MinIO实例由具有单个  <a class="reference internal" href="../reference/minio-server/minio-server.html#command-minio.server" title="minio.server"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span></code></a> 节点的单个服务器池组成。
+独立实例最适合初始开发和评估。</p>
+<p>MinIO部署可以直接在物理设备上运行，在  <code class="docutils literal notranslate"><span class="pre">裸金属</span></code> 或非虚拟化基础架构中运行。
+或者，在云服务中的虚拟机中运行MinIO，例如使用Docker、Podman或Kubernetes。
+MinIO可以在本地、私有云中或市场上提供的众多公共云中运行。</p>
+<p>您设计、构建系统的具体方式称为系统的 <code class="docutils literal notranslate"><span class="pre">拓扑结构</span></code> .</p>
+</section>
+<section id="id2">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">MinIO支持哪些系统拓扑结构？</a><a class="headerlink" href="#id2" title="此标题的永久链接"></a></h2>
+<p>MinIO可以部署到三种拓扑结构：</p>
+<ol class="arabic">
+<li><p><a class="reference internal" href="install-deploy-manage/deploy-minio-single-node-single-drive.html#minio-snsd"><span class="std std-ref">单服务器单磁盘</span></a>, 一个MinIO服务器只有一个驱动器或用于数据的文件夹</p>
+<p>例如，在本地PC上测试时，使用计算机硬盘上的文件夹。</p>
+</li>
+<li><p><a class="reference internal" href="install-deploy-manage/deploy-minio-single-node-multi-drive.html#minio-snmd"><span class="std std-ref">单服务器多磁盘</span></a>, 一个MinIO服务器有多个挂载的驱动器或文件夹用于数据</p>
+<p>例如，一个容器中有两个或更多挂载的卷。</p>
+</li>
+<li><p><a class="reference internal" href="install-deploy-manage/deploy-minio-multi-node-multi-drive.html#minio-mnmd"><span class="std std-ref">多服务器多磁盘</span></a>, 多个MinIO服务器具有多个挂载的驱动器或卷用于数据</p>
+<p>例如，使用Ansible、Terraform或手动流程进行生产部署</p>
+</li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>为了更优的体验和最佳的性能，您可以联系MinIO中国提供商业技术支持和技术托底服务。</p>
+<p>更安心的分布式环境，请联系电话：4008-566-339。</p>
+</div>
+</section>
+<section id="id3">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">分布式的MinIO部署如何工作？</a><a class="headerlink" href="#id3" title="此标题的永久链接"></a></h2>
+<p>分布式部署利用了一个以上的物理或虚拟机的计算和存储资源。
+在现代情况下，这通常意味着在私有或公共云环境中运行MinIO，例如使用Amazon Web Services、Google Cloud Platform、Microsoft的Azure平台或其他许多平台。</p>
+<section id="minio-intro-server-pool">
+<span id="id4"></span><h3><a class="toc-backref" href="#id16" role="doc-backlink">MinIO如何管理多个虚拟或物理服务器？</a><a class="headerlink" href="#minio-intro-server-pool" title="此标题的永久链接"></a></h3>
+<p>虽然在测试MinIO时可能只涉及单个计算机上的单个驱动器，但大多数生产MinIO部署使用多个计算和存储设备来创建高可用性环境。
+服务器池是一组  <a class="reference internal" href="../reference/minio-server/minio-server.html#command-minio.server" title="minio.server"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span></code></a> 节点，它们汇集其驱动器和资源以支持对象存储的写入和检索请求。</p>
+<p>MinIO支持将一个或多个服务器池添加到现有的MinIO部署中进行横向扩展。
+当MinIO有多个服务器池可用时，单个对象始终写入同一服务器池中相同的纠错集。</p>
+<p>如果一个服务器池出现故障，MinIO会停止对所有池的I/O操作，直到集群恢复正常运作。您必须使池恢复正常操作以恢复对部署的I/O操作。
+在执行修复操作时，其他池中写入的对象仍然安全保存在磁盘上。</p>
+<blockquote>
+<div><p><a class="reference internal" href="../reference/minio-server/minio-server.html#minio.server.HOSTNAME" title="minio.server.HOSTNAME"><code class="xref minio minio-mc-cmd docutils literal notranslate"><span class="pre">HOSTNAME</span></code></a> 参数传递给   <a class="reference internal" href="../reference/minio-server/minio-server.html#command-minio.server" title="minio.server"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span></code></a>  表示服务器池：</p>
+</div></blockquote>
+<p>考虑以下示例启动命令，该命令创建一个具有4个 <a class="reference internal" href="../reference/minio-server/minio-server.html#command-minio.server" title="minio.server"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span></code></a> 节点（每个节点有4个驱动器）的单个服务器池，总共16个驱动器。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>minio<span class="w"> </span>server<span class="w"> </span>https://minio<span class="o">{</span><span class="m">1</span>...4<span class="o">}</span>.example.net/mnt/disk<span class="o">{</span><span class="m">1</span>...4<span class="o">}</span>
+
+<span class="w">             </span><span class="p">|</span><span class="w">                    </span>Server<span class="w"> </span>Pool<span class="w">                </span><span class="p">|</span>
+</pre></div>
+</div>
+<p>同一组服务器池使用相同的 <a class="reference internal" href="../reference/minio-server/minio-server.html#command-minio.server" title="minio.server"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span></code></a> 启动命令启动服务器，这样可以使所有服务器认识整个服务器池中的彼此，并了解他们的在线状态。</p>
+<p>详见 <a class="reference internal" href="../reference/minio-server/minio-server.html#command-minio.server" title="minio.server"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span></code></a> 了解完整的语法和命令。</p>
+</section>
+<section id="miniominio">
+<span id="minio-intro-cluster"></span><h3><a class="toc-backref" href="#id17" role="doc-backlink">MinIO如何将多个服务器池链接成单个MinIO集群？</a><a class="headerlink" href="#miniominio" title="此标题的永久链接"></a></h3>
+<p>集群是指由一个或多个服务器池组成的整个MinIO部署。
+考虑以下命令，该命令创建由两个服务器池组成的集群，每个服务器池具有4个  <a class="reference internal" href="../reference/minio-server/minio-server.html#command-minio.server" title="minio.server"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span></code></a> 节点和每个节点4个驱动器，总共32个驱动器。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>minio<span class="w"> </span>server<span class="w"> </span>https://minio<span class="o">{</span><span class="m">1</span>...4<span class="o">}</span>.example.net/mnt/disk<span class="o">{</span><span class="m">1</span>...4<span class="o">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">             </span>https://minio<span class="o">{</span><span class="m">5</span>...8<span class="o">}</span>.example.net/mnt/disk<span class="o">{</span><span class="m">1</span>...4<span class="o">}</span>
+
+<span class="w">             </span><span class="p">|</span><span class="w">                    </span>Server<span class="w"> </span>Pool<span class="w">                </span><span class="p">|</span>
+</pre></div>
+</div>
+<p>每个服务器池都有一个或多个 <a class="reference internal" href="concepts/erasure-coding.html#minio-ec-erasure-set"><span class="std std-ref">纠删码编码集合</span></a>  ，具体取决于池中驱动器和节点的数量 。</p>
+<p>为了确保高可用性和耐久性，MinIO强烈建议生产集群在服务器池中 <strong>最少</strong> 包含4个 <a class="reference internal" href="../reference/minio-server/minio-server.html#command-minio.server" title="minio.server"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">minio</span> <span class="pre">server</span></code></a> 节点。</p>
+</section>
+<section id="id5">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">我可以更改现有MinIO部署的大小吗？</a><a class="headerlink" href="#id5" title="此标题的永久链接"></a></h3>
+<p>MinIO  <a class="reference internal" href="install-deploy-manage/deploy-minio-multi-node-multi-drive.html#minio-mnmd"><span class="std std-ref">分布式部署</span></a> 支持扩展和退役作为增加或减少可用存储的功能。</p>
+<p>扩展包括向现有部署添加一个或多 <a class="reference internal" href="#minio-intro-server-pool"><span class="std std-ref">服务器池</span></a> 。
+每个服务器池都由专用节点和存储组成，这些节点和存储有助于提高部署的整体容量。
+创建服务器池后，就不能更改其大小，但可以随时通过添加或退出服务器池来增加或移除容量。</p>
+<p>请查看和阅读 <a class="reference internal" href="install-deploy-manage/expand-minio-deployment.html#expand-minio-distributed"><span class="std std-ref">扩展MinIO部署</span></a> 了解更多信息。</p>
+<p>对于具有多个服务器池的部署，您可以 <a class="reference internal" href="install-deploy-manage/decommission-server-pool.html#minio-decommissioning"><span class="std std-ref">停用</span></a> 旧池并将该数据迁移到部署中的较新池。
+一旦开始，退役就无法停止。
+MinIO 打算退役以用于删除具有老化硬件的旧池，而不是作为在任何部署中定期执行的操作。</p>
+<div class="note admonition">
+<p class="admonition-title">Maintain pool order when decommissioning and then adding</p>
+<p>如果在多池部署中停用一个池, 不能将相同的节点序列用于新池.
+例如,考虑一个部署,其中有以下资源池:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">minio</span><span class="o">-</span><span class="p">{</span><span class="mf">1.</span><span class="o">.</span><span class="mf">.4</span><span class="p">}</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">drive</span><span class="o">-</span><span class="p">{</span><span class="mf">1.</span><span class="o">.</span><span class="mf">.4</span><span class="p">}</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">minio</span><span class="o">-</span><span class="p">{</span><span class="mf">5.</span><span class="o">.</span><span class="mf">.8</span><span class="p">}</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">drive</span><span class="o">-</span><span class="p">{</span><span class="mf">1.</span><span class="o">.</span><span class="mf">.4</span><span class="p">}</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">minio</span><span class="o">-</span><span class="p">{</span><span class="mf">9.</span><span class="o">.</span><span class="mf">.12</span><span class="p">}</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">drive</span><span class="o">-</span><span class="p">{</span><span class="mf">1.</span><span class="o">.</span><span class="mf">.4</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>如果停用 <code class="docutils literal notranslate"><span class="pre">minio-{5...8}</span></code> 池, 不能添加具有相同节点编号的新池.
+您必须在 <code class="docutils literal notranslate"><span class="pre">minio-{9...12}</span></code> <a href="#id6"><span class="problematic" id="id7">*</span></a>之后*添加新数据池:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">minio</span><span class="o">-</span><span class="p">{</span><span class="mf">1.</span><span class="o">.</span><span class="mf">.4</span><span class="p">}</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">drive</span><span class="o">-</span><span class="p">{</span><span class="mf">1.</span><span class="o">.</span><span class="mf">.4</span><span class="p">}</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">minio</span><span class="o">-</span><span class="p">{</span><span class="mf">9.</span><span class="o">.</span><span class="mf">.12</span><span class="p">}</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">drive</span><span class="o">-</span><span class="p">{</span><span class="mf">1.</span><span class="o">.</span><span class="mf">.4</span><span class="p">}</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">minio</span><span class="o">-</span><span class="p">{</span><span class="mf">13.</span><span class="o">.</span><span class="mf">.16</span><span class="p">}</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">drive</span><span class="o">-</span><span class="p">{</span><span class="mf">1.</span><span class="o">.</span><span class="mf">.4</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="id8">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">我该如何管理一个或多个MinIO实例或集群？</a><a class="headerlink" href="#id8" title="此标题的永久链接"></a></h3>
+<p>有几种选项可用于管理您的MinIO部署和集群：</p>
+<ul class="simple">
+<li><p>使用命令行空具 <a class="reference internal" href="../reference/minio-mc.html#command-mc" title="mc"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">mc</span></code></a> and <a class="reference internal" href="../reference/minio-mc-admin.html#command-mc.admin" title="mc.admin"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">mc</span> <span class="pre">admin</span></code></a></p></li>
+<li><p><a class="reference internal" href="../administration/minio-console.html#minio-console"><span class="std std-ref">MinIO控制台</span></a> 各个实例的图形用户界面</p></li>
+</ul>
+</section>
+<section id="minio-rebalance">
+<span id="id9"></span><h3><a class="toc-backref" href="#id20" role="doc-backlink">我该如何管理MinIO部署中的对象分布？</a><a class="headerlink" href="#minio-rebalance" title="此标题的永久链接"></a></h3>
+<p>MinIO 通过将新对象（即没有现有版本的对象）写入具有最多可用空间（与所有可用服务器池上的可用空间总量相比）的服务器池来优化跨可用池的对象存储。
+MinIO 不会执行将对象从旧池重新平衡到新池的昂贵操作。
+相反，新对象通常会路由到新池，因为它具有最多的可用空间。
+当该池填满时，新的写入操作最终会在部署中的所有池之间达到平衡。
+有关写入偏好计算逻辑的更多信息，请参考和阅读 <a class="reference internal" href="install-deploy-manage/expand-minio-deployment.html#minio-writing-files"><span class="std std-ref">写入文件</span></a> 。</p>
+<p>扩展后在所有池中重新平衡数据是一项昂贵的操作，需要扫描整个部署并在池之间移动对象。
+这可能需要很长时间才能完成，具体取决于要移动的数据量。</p>
+<p>从 MinIO客户端版本 RELEASE.2022-11-07T23-47-39Z 开始，您可以使用 mc admin rebalance 手动启动所有服务器池的重新平衡操作。</p>
+<p>重新平衡不会阻止正在进行的操作，并且与所有其他 I/O 并行运行。
+这可能会导致常规操作的性能降低。
+考虑在非高峰时段安排重新平衡操作，以避免影响生产工作负载。
+您可以随时开始和停止重新平衡</p>
+</section>
+</section>
+<section id="id10">
+<h2><a class="toc-backref" href="#id21" role="doc-backlink">如何上传一个对象到MinIO?</a><a class="headerlink" href="#id10" title="此标题的永久链接"></a></h2>
+<p>您可以使用任何S3兼容的SDK将对象上传到MinIO部署。
+每个SDK执行相当于PUT操作的功能，将对象传输到MinIO进行存储。
+MinIO 还实现了 <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html">超大文件分片上传</a> 的支持，客户端可以将一个对象拆分为多个部分，以获得更好的吞吐量和传输可靠性。
+MinIO 重新组装这些部分，直到获得完整的对象，然后将该对象存储在指定的路径中。</p>
+</section>
+<section id="minio-minio">
+<h2><a class="toc-backref" href="#id22" role="doc-backlink">经过10年，全世界都认可MinIO的可用性和稳定性，那么MinIO是如何保障高可用、冗余性和数据持久性的?</a><a class="headerlink" href="#minio-minio" title="此标题的永久链接"></a></h2>
+<section id="minio-erasure-coding">
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">MinIO使用 <a class="reference internal" href="concepts/erasure-coding.html#minio-erasure-coding"><span class="std std-ref">Erasure Coding(纠删码)</span></a> 保障数据的安全、冗余和持久性。</a><a class="headerlink" href="#minio-erasure-coding" title="此标题的永久链接"></a></h3>
+<p>MinIO 纠删码是一种数据冗余和可用性功能，允许具有多个驱动器的 MinIO 部署自动动态重建对象，尽管集群中多个驱动器或节点丢失。
+纠删码提供对象级 <a class="reference internal" href="concepts/healing.html#minio-concepts-healing"><span class="std std-ref">修复</span></a>，其开销比 RAID 或复制等相邻技术要少得多。</p>
+</section>
+<section id="minio-bit-rot">
+<h3><a class="toc-backref" href="#id24" role="doc-backlink">MinIO使用腐位保护(Bit Rot)修复和保护静态数据</a><a class="headerlink" href="#minio-bit-rot" title="此标题的永久链接"></a></h3>
+<p>比特腐败是指可能发生在任何存储设备上的数据随机、静默损坏。
+比特腐败不受用户的任何活动所促使，也不单单依赖于操作系统本身来识别并通知用户或管理员数据发生了更改。</p>
+<p>常见的导致比特腐败的原因包括：</p>
+<ul class="simple">
+<li><p>设备老化</p></li>
+<li><p>电流突波</p></li>
+<li><p>磁盘固件错误</p></li>
+<li><p>幻写</p></li>
+<li><p>读/写方向错误</p></li>
+<li><p>驱动程序错误</p></li>
+<li><p>意外覆盖</p></li>
+</ul>
+<p>MinIO使用哈希算法来确认对象的完整性。
+这个算法会在对对象执行任何 <code class="docutils literal notranslate"><span class="pre">GET</span></code> 和 <code class="docutils literal notranslate"><span class="pre">HEAD</span></code> 操作时自动应用。
+对于版本化桶中的对象，如果MinIO识别出版本不一致， <code class="docutils literal notranslate"><span class="pre">PUT</span></code> 操作也可能触发修复。
+如果对象由于位旋转而损坏，MinIO可以根据对象的可用的奇偶校验片段来自动 <a class="reference internal" href="concepts/healing.html#minio-concepts-healing"><span class="std std-ref">修复</span></a> 对象。</p>
+<p>MinIO还可以使用 <a class="reference internal" href="concepts/scanner.html#minio-concepts-scanner"><span class="std std-ref">MinIO扫描器</span></a> 执行位旋转检查和修复。
+然而，默认情况下扫描器的位旋转检查是 <strong>关闭</strong> 的。
+在扫描器运行期间进行活跃的位旋转修复与位旋转影响分布在多个驱动器和节点上的多个对象片段的概率低相比，性能影响很大。
+在正常操作期间的自动检查通常对于位旋转来说已经足够，MinIO不建议使用扫描器进行此类健康检查。</p>
+</section>
+<section id="minio-erasure-sets">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">MinIO分布式数据保护请阅读 <a class="reference internal" href="concepts/erasure-coding.html#minio-ec-erasure-set"><span class="std std-ref">纠删码（Erasure Sets）</span></a> 了解我们的高可用和数据保护策略。</a><a class="headerlink" href="#minio-erasure-sets" title="此标题的永久链接"></a></h3>
+<p>纠删码的集合是一组支持 MinIO 的多个驱动器，可以查看参考： <a class="reference internal" href="concepts/erasure-coding.html#minio-erasure-coding"><span class="std std-ref">Erasure Coding(纠删码)</span></a>.
+纠删码为 MinIO 部署上存储的数据提供高可用性、可靠性和冗余性。</p>
+<p>MinIO 将对象划分为块（称为  <cite>分片</cite> ），并将它们均匀地分布在纠删码集合中的每个驱动器中。
+尽管丢失任何单个驱动器，MinIO 仍可以继续无缝地服务读写请求。
+在最高冗余级别，MinIO 可以以最小的性能影响来处理读取请求，尽管部署中的总驱动器丢失了多达一半 (<span class="math notranslate nohighlight">\(N / 2\)</span>) 。
+MinIO 根据集合中的驱动器总数 <em>和</em> 集合中的 <a class="reference internal" href="../reference/minio-server/minio-server.html#command-minio" title="minio"><code class="xref minio minio-mc docutils literal notranslate"><span class="pre">minio</span></code></a> 服务器数量来计算服务器池中纠删码集合的大小和数量。 请参考和阅读  <a class="reference internal" href="concepts/erasure-coding.html#minio-ec-erasure-set"><span class="std std-ref">纠删码（Erasure Coding）的基础知识</span></a>  了解更多信息。</p>
+<div class="warning admonition">
+<p class="admonition-title">Exclusive access to drives</p>
+<p>MinIO <strong>要求</strong> <em>专有</em> 对提供给对象存储的驱动器或卷的访问。
+其他任何进程、软件、脚本或人员都不得直接对提供给MinIO的驱动器或卷执行 <em>任何</em> 操作，也不得对MinIO放置在其上的对象或文件执行操作。</p>
+<p>除非由MinIO工程部门指导，否则不要使用脚本或工具直接修改、删除或移动提供给MinIO的驱动器上的任何数据片段、校验片段或元数据文件，包括从一个驱动器或节点移动到另一个驱动器或节点。
+这些操作很可能会导致广泛的数据损坏和丢失，超出了MinIO的修复能力。</p>
+</div>
+</section>
+<section id="id11">
+<h3><a class="toc-backref" href="#id26" role="doc-backlink">MinIO 自动即时修复损坏或丢失的数据</a><a class="headerlink" href="#id11" title="此标题的永久链接"></a></h3>
+<p><a class="reference internal" href="concepts/healing.html#minio-concepts-healing"><span class="std std-ref">修复（Healing）</span></a> 是MinIO在某些事件导致数据丢失后恢复数据的能力。
+数据丢失可能来自位损坏、驱动器丢失或节点丢失。</p>
+<p><a class="reference internal" href="concepts/erasure-coding.html#minio-erasure-coding"><span class="std std-ref">Erasure Coding(纠删码)</span></a> 如果对象部分丢失，则提供持续的读写访问。</p>
+</section>
+<section id="id12">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">MinIO 通过奇偶校验在对象级别写入数据保护</a><a class="headerlink" href="#id12" title="此标题的永久链接"></a></h3>
+<p>具有多个驱动器的 MinIO 部署将可用驱动器分为数据驱动器和奇偶校验驱动器。
+当写入对象时，MinIO 纠删码将有关对象内容的附加哈希信息添加到奇偶校验驱动器中。
+MinIO 使用奇偶校验信息来确认对象的完整性，并在必要时恢复给定驱动器或一组驱动器上丢失、丢失或损坏的对象分片。</p>
+<p>MinIO 可以容忍丢失最多等于纠删码集合中可用奇偶校验设备数量的驱动器总数，同时仍提供对对象的完全访问。</p>
+</section>
+<section id="quorum">
+<h3><a class="toc-backref" href="#id28" role="doc-backlink">通过 Quorum 提供读写功能</a><a class="headerlink" href="#quorum" title="此标题的永久链接"></a></h3>
+<p>执行任务必须可用的最小驱动器数量。
+MinIO 有一个用于读取数据的仲裁和一个用于写入数据的单独仲裁。</p>
+<p>通常，与读取对象所需的数量相比，MinIO 需要更多数量的可用驱动器来维持写入对象的能力。</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+</section>
+
+<div class="footer">
+   本作品已获得许可
+   <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">知识共享归属 4.0 国际许可证。</a>
+   2020-至今。MinIO Inc英文创作， <a href="https://www.minio.org.cn">MinIO中国</a> 团队（北京京厂科技有限公司）进行汉化
+   <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+      <img height="10" alt="Creative Commons License" src="https://js.minio.org.cn/80x15.png" />
+   </a>
+ </div>
+
+ <!--<script src="https://www.minio.org.cn/docs/static/jiucuo-zn.js"></script>-->
+ 
+ <a target="_blank" href="https://tb.53kf.com/code/client/851fb0c79d6722d0cb5a9649182512534/1" rel="noreferrer" class="footer__widget" id="join-slack">
+   <img loading="lazy" width="20" height="19" src="https://www.minio.org.cn/resources/img/footer/slack.svg" alt="Join Slack">
+   <span>商业支持购买咨询</span>
+</a>
+         </div>
+      </div>
+   </section>
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?c79c36d1dec2257e69e09c8a2e2110e8";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+         </div>
+      </div>
+   </section><div id="cookie">
+    <div class="container">
+        <div class="cookie__text">
+            <strong>您的隐私对我们非常重要：</strong>
+            我们使用cookies以便为您提供更好的体验。如果您希望，您随时可以查阅我们的
+            <a target="_blank" rel="noreferrer noopener" href="https://www.minio.org.cn/privacy-policy">  隐私政策。</a>.
+        </div>
+
+        <button type="button" id="cookie__btn">同意</button>
+    </div>
+</div>
+<script>
+    // Dark mode and read mode detection
+
+    // Dark mode
+    var isDarkMode = localStorage.getItem("dark-mode");
+    var dmToggleBtn = document.getElementById("dark-mode-toggle");
+    if (isDarkMode === "true") {
+       document.documentElement.classList.add("dark-mode");
+       dmToggleBtn.classList.add("active");
+    }
+
+    // Read mode
+    var isReadMode = localStorage.getItem("read-mode");
+    var rmToggleBtn = document.getElementById("read-mode-toggle");
+
+    if (isReadMode === "true") {
+        document.documentElement.classList.add("read-mode");
+        rmToggleBtn.classList.add("active");
+    }
+ </script>
+  </body>
+</html>
