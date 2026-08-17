@@ -30,3 +30,41 @@ Path配置的值为：
 
 当输入指令后出现以上界面时表示JDK安装成功。
 
+
+
+3、Windows如何切换不同版本JDK
+
+① 已经下载不同版本的JDK压缩包并解压在相应的目录下面
+
+② 使用下面的cmd程序进行切换
+
+```bash
+@echo off
+cls
+echo ------------------------------------------------
+echo current Java version is:
+java -version
+echo ------------------------------------------------
+echo input need java version option:
+echo options   content
+echo 8      switch to jdk8
+echo 17     switch to jdk17
+echo 21     switch to jdk21
+echo ------------------------------------------------
+set /P choose=please input option:
+IF "%choose%"=="8" (
+    setx JAVA_HOME "C:\Program Files\Java\jdk1.8.0_201" /M
+    echo has switch to JDK8
+) ELSE IF "%choose%"=="17" (
+    setx JAVA_HOME "C:\Program Files\Java\jdk-17.0.12" /M
+    echo has switch to JDK17
+) ELSE IF "%choose%"=="21" (
+    setx JAVA_HOME "C:\Program Files\Java\jdk-21" /M
+    echo has switch to JDK21
+) ELSE (
+    echo input error！！！
+)
+pause
+```
+
+其中JAVA_HOME就是我们先前建立的环境变量，简而言之就是修改环境变量的值从而达到切换JDK的效果。
