@@ -1,4 +1,4 @@
-# 环境安装
+# 前期准备
 
 ## 一、JDK安装
 
@@ -68,3 +68,16 @@ pause
 ```
 
 其中JAVA_HOME就是我们先前建立的环境变量，简而言之就是修改环境变量的值从而达到切换JDK的效果。
+
+
+
+## 二、官方文档引用
+
+本次学习JAVASE使用JDK8版本进行学习，相关的官方参考文档如下：
+
+- [JAVA8官方文档](https://docs.oracle.com/javase/8/docs/)
+
+- [Java Language and Virtual Machine Specifications](https://docs.oracle.com/javase/specs/index.html)
+
+
+
