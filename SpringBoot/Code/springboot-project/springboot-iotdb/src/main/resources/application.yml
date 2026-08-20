@@ -1,8 +1,10 @@
 
+spring:
+  application:
+    name: springboot-iotdb
 
-server:
-  port: 8888
 
+# iot相关配置
 iot-db:
   username: root
   password: root
