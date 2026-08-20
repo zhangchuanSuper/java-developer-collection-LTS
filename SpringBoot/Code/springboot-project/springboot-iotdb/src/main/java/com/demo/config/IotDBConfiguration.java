@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "iot-db")
 public class IotDBConfiguration {
-
     private String username;
     private String password;
     private String host;
