@@ -1,4 +1,4 @@
-package com.demo.api.response;
+package com.demo.utils.query.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +22,5 @@ public class DataValueObject {
         this.value = value;
         this.dataType = dataType;
     }
+
 }

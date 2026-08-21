@@ -1,12 +1,16 @@
-package com.demo.api.enums;
+package com.demo.utils.insert.enums;
 
 import lombok.Getter;
 
 import java.util.EnumSet;
 import java.util.Set;
 
+
+/**
+ * 实际数据饿对应类型
+ */
 @Getter
-public enum ProductAttributeDataTypeEnum {
+public enum ActualDataTypeEnum {
 
     INT("整型"),
     DECIMAL("数字格式"),
@@ -17,18 +21,18 @@ public enum ProductAttributeDataTypeEnum {
 
     private final String desc;
 
-    ProductAttributeDataTypeEnum(String desc) {
+    ActualDataTypeEnum(String desc) {
         this.desc = desc;
     }
 
-    private static final Set<ProductAttributeDataTypeEnum> NUMBER_TYPES = EnumSet.of(INT, DECIMAL);
+    private static final Set<ActualDataTypeEnum> NUMBER_TYPES = EnumSet.of(INT, DECIMAL);
 
 
     public boolean isNumberType() {
         return NUMBER_TYPES.contains(this);
     }
 
-    public static boolean isNumberType(ProductAttributeDataTypeEnum dataType) {
+    public static boolean isNumberType(ActualDataTypeEnum dataType) {
         return dataType != null && dataType.isNumberType();
     }
 

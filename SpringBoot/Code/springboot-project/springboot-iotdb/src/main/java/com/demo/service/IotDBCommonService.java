@@ -1,11 +1,12 @@
 package com.demo.service;
 
-import com.demo.api.enums.ProductAttributeDataTypeEnum;
-import com.demo.api.response.AttributeDataResponse;
-import com.demo.api.response.DataValueObject;
-import com.demo.utils.ConditionGroup;
+import com.demo.utils.insert.enums.ActualDataTypeEnum;
+import com.demo.utils.insert.dto.AttributeDataResponse;
+import com.demo.utils.query.response.DataValueObject;
+import com.demo.utils.query.enums.ConditionGroup;
 import com.demo.utils.JsonUtils;
 import com.demo.utils.WhereConditionUtils;
+import com.demo.utils.records.MultipleRecord;
 import org.apache.iotdb.isession.SessionDataSet;
 import org.apache.iotdb.isession.pool.SessionDataSetWrapper;
 import org.apache.iotdb.session.pool.SessionPool;
@@ -45,13 +46,11 @@ public class IotDBCommonService {
     @Autowired
     private SessionPool iotDbSessionPool;
 
-    public record PathTriple(String attributeKey, String tableColumnName, String fullPath) {
-    }
 
-    public PathTriple generatePathTriple(String deviceUniqueCode, String typeKey, String attributeKey) {
+    public MultipleRecord.PathTriple generatePathTriple(String deviceUniqueCode, String typeKey, String attributeKey) {
         String tableColumnName = typeKey + SEPARATOR + attributeKey;
         String fullPath = DATABASE_NAME + "." + genDeviceTableName(deviceUniqueCode) + "." + tableColumnName;
-        return new PathTriple(attributeKey, tableColumnName, fullPath);
+        return new MultipleRecord.PathTriple(attributeKey, tableColumnName, fullPath);
     }
 
     /**
@@ -85,7 +84,7 @@ public class IotDBCommonService {
         dataMap.forEach((keyPair, attributeDataResponse) ->
                 schemaList.add(new MeasurementSchema(keyPair.first(), dataTypeConvert(attributeDataResponse).dataType())));
 
-        DataTypeValueHolder dataTypeValuePair = convertData(dataMap);
+        MultipleRecord.DataTypeValueHolder dataTypeValuePair = convertData(dataMap);
 
         boolean successFlag = true;
         String insertMessage = "insert success";
@@ -107,35 +106,31 @@ public class IotDBCommonService {
         logger.info("insert data deviceCode:{},pushTime:{},result is {},detail is {}", deviceUniqueCode, pushTime, successFlag, insertMessage);
     }
 
-    private DataTypeValueHolder convertData(Map<StringPair, AttributeDataResponse> dataMap) {
+    private MultipleRecord.DataTypeValueHolder convertData(Map<StringPair, AttributeDataResponse> dataMap) {
         List<TSDataType> dataTypeList = new ArrayList<>();
         List<Object> dataValueList = new ArrayList<>();
         dataMap.forEach((keyPair, attributeDataResponse) -> {
-            DataTypeValue convertPair = dataTypeConvert(attributeDataResponse);
+            MultipleRecord.DataTypeValue convertPair = dataTypeConvert(attributeDataResponse);
             dataTypeList.add(convertPair.dataType());
             dataValueList.add(convertPair.value());
         });
-        return new DataTypeValueHolder(dataTypeList, dataValueList);
+        return new MultipleRecord.DataTypeValueHolder(dataTypeList, dataValueList);
     }
 
-    private DataTypeValue dataTypeConvert(AttributeDataResponse attributeResponse) {
-        ProductAttributeDataTypeEnum dataType = attributeResponse.getDataType();
+    private MultipleRecord.DataTypeValue dataTypeConvert(AttributeDataResponse attributeResponse) {
+        ActualDataTypeEnum dataType = attributeResponse.getDataType();
         if (dataType == null) {
             throw new IllegalArgumentException("Invalid data type");
         }
         return switch (dataType) {
-            case INT -> new DataTypeValue(TSDataType.INT64, Long.parseLong(attributeResponse.getAttributeValue().toString()));
-            case DECIMAL -> new DataTypeValue(TSDataType.DOUBLE, Double.parseDouble(attributeResponse.getAttributeValue().toString()));
-            case STRING, JSON, DATETIME -> new DataTypeValue(TSDataType.STRING, JsonUtils.toJsonString(attributeResponse.getAttributeValue()));
-            case BOOLEAN -> new DataTypeValue(TSDataType.STRING, attributeResponse.getAttributeValue());
+            case INT -> new MultipleRecord.DataTypeValue(TSDataType.INT64, Long.parseLong(attributeResponse.getAttributeValue().toString()));
+            case DECIMAL -> new MultipleRecord.DataTypeValue(TSDataType.DOUBLE, Double.parseDouble(attributeResponse.getAttributeValue().toString()));
+            case STRING, JSON, DATETIME -> new MultipleRecord.DataTypeValue(TSDataType.STRING, JsonUtils.toJsonString(attributeResponse.getAttributeValue()));
+            case BOOLEAN -> new MultipleRecord.DataTypeValue(TSDataType.STRING, attributeResponse.getAttributeValue());
         };
     }
 
-    private record DataTypeValue(TSDataType dataType, Object value) {
-    }
 
-    private record DataTypeValueHolder(List<TSDataType> dataTypes, List<Object> values) {
-    }
 
     public List<List<DataValueObject>> executeDatabaseQuery(List<ConditionGroup> groupConditions) {
         String fullSql = generateFullCondition(QUERY_DATABASE_SQL_TEMPLATE, groupConditions);
@@ -263,11 +258,13 @@ public class IotDBCommonService {
     }
 
     private String generateFullCondition(String selectorSql, List<ConditionGroup> groupConditions) {
-        String fullCondition = WhereConditionUtils.buildCondition(groupConditions);
+        String fullCondition = WhereConditionUtils.buildCondition(
+                groupConditions == null ? List.of() : groupConditions
+        );
         if (fullCondition.isBlank()) {
             return selectorSql;
         }
-        return selectorSql + " " + WHERE_KEY + " " + fullCondition;
+        return "%s %s %s".formatted(selectorSql, WHERE_KEY, fullCondition);
     }
 
     public DeviceInfoList findDatabaseDeviceInfoList() {

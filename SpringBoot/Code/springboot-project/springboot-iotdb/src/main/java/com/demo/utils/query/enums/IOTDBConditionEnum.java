@@ -1,4 +1,4 @@
-package com.demo.utils.enums;
+package com.demo.utils.query.enums;
 
 import lombok.Getter;
 import org.apache.tsfile.enums.TSDataType;

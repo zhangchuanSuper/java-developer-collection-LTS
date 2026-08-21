@@ -1,6 +1,5 @@
-package com.demo.component;
+package com.demo.config;
 
-import com.demo.config.IotDBConfiguration;
 import org.apache.iotdb.session.pool.SessionPool;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,10 @@
-package com.demo.utils.enums;
+package com.demo.utils.query.enums;
 
 import lombok.Getter;
 
+/**
+ * iot-db查询的逻辑操作
+ */
 @Getter
 public enum IotDBLogicOperationEnum {
 
@@ -26,4 +29,5 @@ public enum IotDBLogicOperationEnum {
     IotDBLogicOperationEnum(String operator) {
         this.operator = operator;
     }
+
 }
