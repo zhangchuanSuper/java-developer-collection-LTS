@@ -12,7 +12,7 @@
     </parent>
 
     <groupId>com.atguigu</groupId>
-    <artifactId>springAiProject</artifactId>
+    <artifactId>spring-ai-project</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
